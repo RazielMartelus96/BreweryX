@@ -1,7 +1,7 @@
 package com.dre.brewery;
 
 import com.dre.brewery.api.events.IngedientAddEvent;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.RecipeItem;
 import com.dre.brewery.utility.BUtil;

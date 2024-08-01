@@ -3,7 +3,7 @@ package com.dre.brewery.recipe;
 import com.dre.brewery.BIngredients;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;

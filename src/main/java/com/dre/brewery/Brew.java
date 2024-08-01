@@ -1,7 +1,7 @@
 package com.dre.brewery;
 
 import com.dre.brewery.api.events.brew.BrewModifyEvent;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.filedata.ConfigUpdater;
 import com.dre.brewery.lore.*;
 import com.dre.brewery.recipe.BEffect;

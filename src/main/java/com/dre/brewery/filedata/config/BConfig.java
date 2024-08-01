@@ -1,8 +1,12 @@
-package com.dre.brewery.filedata;
+package com.dre.brewery.filedata.config;
 
 import com.dre.brewery.*;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.events.ConfigLoadEvent;
+import com.dre.brewery.filedata.ConfigUpdater;
+import com.dre.brewery.filedata.DataSave;
+import com.dre.brewery.filedata.LanguageReader;
+import com.dre.brewery.filedata.config.addons.AddonType;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
 import com.dre.brewery.integration.barrel.WGBarrel;
 import com.dre.brewery.integration.barrel.WGBarrel5;
@@ -32,10 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BConfig {
@@ -45,7 +46,7 @@ public class BConfig {
 	public static final String configVersion = "3.1";
 	public static boolean updateCheck;
 	public static CommandSender reloader;
-
+	private static Map<AddonType, Boolean> useAddonMap = new HashMap<>();
 	// Third Party Enabled
 	public static boolean useWG; //WorldGuard
 	public static WGBarrel wg;
@@ -222,24 +223,17 @@ public class BConfig {
 		// If the Update Checker should be enabled
 		updateCheck = config.getBoolean("updateCheck", false);
 
-		PluginManager plMan = breweryPlugin.getServer().getPluginManager();
+		PluginManager pluginManager = breweryPlugin.getServer().getPluginManager();
 
 		// Third-Party
-		useWG = config.getBoolean("useWorldGuard", true) && plMan.isPluginEnabled("WorldGuard");
-		useLWC = config.getBoolean("useLWC", true) && plMan.isPluginEnabled("LWC");
-		useTowny = config.getBoolean("useTowny", true) && plMan.isPluginEnabled("Towny");
-		useGP = config.getBoolean("useGriefPrevention", true) && plMan.isPluginEnabled("GriefPrevention");
-		useLB = config.getBoolean("useLogBlock", false) && plMan.isPluginEnabled("LogBlock");
-		useGMInventories = config.getBoolean("useGMInventories", false);
-		useCitadel = config.getBoolean("useCitadel", false) && plMan.isPluginEnabled("Citadel");
-		useBlocklocker = config.getBoolean("useBlockLocker", false) && plMan.isPluginEnabled("BlockLocker");
-		virtualChestPerms = config.getBoolean("useVirtualChestPerms", false);
+		initAddons(config, pluginManager);
+
 		// The item util has been removed in Vault 1.7+
-		hasVault = plMan.isPluginEnabled("Vault")
-			&& Integer.parseInt(plMan.getPlugin("Vault").getDescription().getVersion().split("\\.")[1]) <= 6;
-		hasChestShop = plMan.isPluginEnabled("ChestShop");
-		hasShopKeepers = plMan.isPluginEnabled("Shopkeepers");
-		hasSlimefun = plMan.isPluginEnabled("Slimefun");
+		hasVault = pluginManager.isPluginEnabled("Vault")
+			&& Integer.parseInt(pluginManager.getPlugin("Vault").getDescription().getVersion().split("\\.")[1]) <= 6;
+		hasChestShop = pluginManager.isPluginEnabled("ChestShop");
+		hasShopKeepers = pluginManager.isPluginEnabled("Shopkeepers");
+		hasSlimefun = pluginManager.isPluginEnabled("Slimefun");
 
 		// various Settings
 		DataSave.autosave = config.getInt("autosave", 3);
@@ -395,6 +389,7 @@ public class BConfig {
 			}
 		}
 
+		//TODO jesus christ what even is this?!? The whole world guard impl needs fixing asap!
 		if (useWG) {
 			Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
 			if (plugin != null) {
@@ -454,5 +449,21 @@ public class BConfig {
 		BreweryPlugin.getInstance().getServer().getPluginManager().callEvent(event);
 
 
+	}
+
+	private static void initAddons(FileConfiguration config, PluginManager pluginManager){
+		Arrays.stream(AddonType.values()).forEach(addon->{
+			boolean isEnabled;
+			if(addon.getName() != null){
+				isEnabled = pluginManager.isPluginEnabled(addon.getName());
+			}
+			else{
+				isEnabled = true;
+			}
+			useAddonMap.put(addon,config
+				.getBoolean(
+					addon.getKey(), true) && isEnabled);
+
+		});
 	}
 }

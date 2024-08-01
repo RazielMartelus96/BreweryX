@@ -6,7 +6,7 @@ import com.dre.brewery.Barrel;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.Wakeup;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.integration.bstats.Metrics.AdvancedPie;
 import com.dre.brewery.integration.bstats.Metrics.DrilldownPie;
 import com.dre.brewery.integration.bstats.Metrics.SimplePie;

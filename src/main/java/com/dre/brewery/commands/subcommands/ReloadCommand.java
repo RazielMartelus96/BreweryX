@@ -6,7 +6,7 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.commands.CommandUtil;
 import com.dre.brewery.commands.SubCommand;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;

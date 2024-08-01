@@ -3,7 +3,7 @@ package com.dre.brewery.integration;
 import com.Acrobot.ChestShop.Events.ShopCreatedEvent;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.event.EventHandler;

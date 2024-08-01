@@ -1,7 +1,7 @@
 package com.dre.brewery.recipe;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;

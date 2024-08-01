@@ -4,7 +4,7 @@ import com.dre.brewery.api.events.barrel.BarrelAccessEvent;
 import com.dre.brewery.api.events.barrel.BarrelCreateEvent;
 import com.dre.brewery.api.events.barrel.BarrelDestroyEvent;
 import com.dre.brewery.api.events.barrel.BarrelRemoveEvent;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.integration.barrel.LogBlockBarrel;
 import com.dre.brewery.lore.BrewLore;
 import com.dre.brewery.utility.BUtil;

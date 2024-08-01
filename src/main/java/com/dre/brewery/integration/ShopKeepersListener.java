@@ -2,7 +2,7 @@ package com.dre.brewery.integration;
 
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.nisovin.shopkeepers.api.events.PlayerOpenUIEvent;
 import com.nisovin.shopkeepers.api.ui.DefaultUITypes;
 import org.bukkit.Material;

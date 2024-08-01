@@ -24,7 +24,7 @@ package com.dre.brewery;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.commands.CommandManager;
 import com.dre.brewery.commands.CommandUtil;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.filedata.BData;
 import com.dre.brewery.filedata.DataSave;
 import com.dre.brewery.filedata.LanguageReader;

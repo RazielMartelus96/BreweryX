@@ -1,6 +1,7 @@
 package com.dre.brewery.filedata;
 
 import com.dre.brewery.*;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.lore.Base91DecoderStream;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.SimpleItem;

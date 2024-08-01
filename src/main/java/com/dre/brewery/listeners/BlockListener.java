@@ -3,7 +3,7 @@ package com.dre.brewery.listeners;
 import com.dre.brewery.*;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.events.barrel.BarrelDestroyEvent;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.filedata.BData;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
 import com.dre.brewery.model.sealer.BrewerySealer;

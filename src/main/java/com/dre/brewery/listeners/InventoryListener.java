@@ -1,7 +1,7 @@
 package com.dre.brewery.listeners;
 
 import com.dre.brewery.*;
-import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.filedata.config.BConfig;
 import com.dre.brewery.lore.BrewLore;
 import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.utility.MinecraftVersion;
