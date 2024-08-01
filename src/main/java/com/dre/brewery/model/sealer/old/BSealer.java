@@ -18,9 +18,6 @@ import org.jetbrains.annotations.NotNull;
  * <p>Class doesn't load in mc 1.12 and lower (Can't find RecipeChoice, BlockData and NamespacedKey)
  */
 public class BSealer implements BrewerySealer {
-	public static final NamespacedKey TAG_KEY = new NamespacedKey(BreweryPlugin.getInstance(), "SealingTable");
-	public static final NamespacedKey LEGACY_TAG_KEY = new NamespacedKey("brewery", "sealingtable"); // Do not capitalize
-	public static boolean recipeRegistered = false;
 	public static boolean inventoryHolderWorking = true;
 
 	private final Inventory inventory;

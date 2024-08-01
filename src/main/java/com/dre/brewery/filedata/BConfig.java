@@ -11,7 +11,6 @@ import com.dre.brewery.integration.barrel.WGBarrel7;
 import com.dre.brewery.integration.item.BreweryPluginItem;
 import com.dre.brewery.integration.item.MMOItemsPluginItem;
 import com.dre.brewery.integration.item.SlimefunPluginItem;
-import com.dre.brewery.model.sealer.old.BSealer;
 import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
@@ -110,6 +109,8 @@ public class BConfig {
 	public static String sqlHost, sqlPort, sqlDB;
 	public static SQLSync sqlSync;
 	public static boolean sqlDrunkSync;
+
+	public static boolean isSealerRegistered = false;
 
 	public static BreweryPlugin breweryPlugin = BreweryPlugin.getInstance();
 
@@ -385,10 +386,12 @@ public class BConfig {
 
 		// Register Sealing Table Recipe
 		if (VERSION.isOrLater(MinecraftVersion.V1_14)) {
-			if (craftSealingTable && !BSealer.recipeRegistered) {
+			if (craftSealingTable && !isSealerRegistered) {
 				BrewerySealer.registerRecipe();
-			} else if (!craftSealingTable && BSealer.recipeRegistered) {
+				isSealerRegistered = true;
+			} else if (!craftSealingTable && isSealerRegistered) {
 				BrewerySealer.unregisterRecipe();
+				isSealerRegistered =false;
 			}
 		}
 

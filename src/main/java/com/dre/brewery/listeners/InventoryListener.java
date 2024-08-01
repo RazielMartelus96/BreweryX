@@ -3,7 +3,7 @@ package com.dre.brewery.listeners;
 import com.dre.brewery.*;
 import com.dre.brewery.filedata.BConfig;
 import com.dre.brewery.lore.BrewLore;
-import com.dre.brewery.model.sealer.old.BSealer;
+import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -200,10 +200,10 @@ public class InventoryListener implements Listener {
 	public void onInventoryClickBSealer(InventoryClickEvent event) {
 		if (VERSION.isOrEarlier(MinecraftVersion.V1_13)) return;
 		InventoryHolder holder = event.getInventory().getHolder();
-		if (!(holder instanceof BSealer)) {
+		if (!(holder instanceof BrewerySealer)) {
 			return;
 		}
-		((BSealer) holder).clickInv();
+		((BrewerySealer) holder).clickInv();
 	}
 
 	//public static boolean opening = false;
@@ -293,8 +293,8 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 		if (VERSION.isOrEarlier(MinecraftVersion.V1_13)) return;
-		if (event.getInventory().getHolder() instanceof BSealer) {
-			((BSealer) event.getInventory().getHolder()).closeInv();
+		if (event.getInventory().getHolder() instanceof BrewerySealer) {
+			((BrewerySealer) event.getInventory().getHolder()).closeInv();
 		}
 
 		if (VERSION.isOrEarlier(MinecraftVersion.V1_14)) return;
