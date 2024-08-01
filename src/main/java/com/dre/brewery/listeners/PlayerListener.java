@@ -3,6 +3,8 @@ package com.dre.brewery.listeners;
 import com.dre.brewery.*;
 import com.dre.brewery.filedata.BConfig;
 import com.dre.brewery.filedata.UpdateChecker;
+import com.dre.brewery.model.sealer.BrewerySealer;
+import com.dre.brewery.model.sealer.SealerFactory;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -55,14 +57,14 @@ public class PlayerListener implements Listener {
 		}
 
 		// -- Opening a Sealing Table --
-		if (VERSION.isOrLater(MinecraftVersion.V1_14) && BSealer.isBSealer(clickedBlock)) {
+		if (VERSION.isOrLater(MinecraftVersion.V1_14) && BrewerySealer.isBSealer(clickedBlock)) {
 			if (player.isSneaking()) {
 				event.setUseInteractedBlock(Event.Result.DENY);
 				return;
 			}
 			event.setCancelled(true);
 			if (BConfig.enableSealingTable) {
-				BSealer sealer = new BSealer(player);
+				BrewerySealer sealer = new SealerFactory(player).create();
 				event.getPlayer().openInventory(sealer.getInventory());
 			} else {
 				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_SealingTableDisabled"));

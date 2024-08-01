@@ -11,6 +11,8 @@ import com.dre.brewery.integration.barrel.WGBarrel7;
 import com.dre.brewery.integration.item.BreweryPluginItem;
 import com.dre.brewery.integration.item.MMOItemsPluginItem;
 import com.dre.brewery.integration.item.SlimefunPluginItem;
+import com.dre.brewery.model.sealer.old.BSealer;
+import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.PluginItem;
@@ -384,9 +386,9 @@ public class BConfig {
 		// Register Sealing Table Recipe
 		if (VERSION.isOrLater(MinecraftVersion.V1_14)) {
 			if (craftSealingTable && !BSealer.recipeRegistered) {
-				BSealer.registerRecipe();
+				BrewerySealer.registerRecipe();
 			} else if (!craftSealingTable && BSealer.recipeRegistered) {
-				BSealer.unregisterRecipe();
+				BrewerySealer.unregisterRecipe();
 			}
 		}
 

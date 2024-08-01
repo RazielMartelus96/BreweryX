@@ -1,8 +1,8 @@
 package com.dre.brewery.commands.subcommands;
 
-import com.dre.brewery.BSealer;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.commands.SubCommand;
+import com.dre.brewery.model.sealer.SealerFactory;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ public class SealCommand implements SubCommand {
         }
         Player player = (Player) sender;
 
-        player.openInventory(new BSealer(player).getInventory());
+        player.openInventory(new SealerFactory(player).create().getInventory());
     }
 
     @Override

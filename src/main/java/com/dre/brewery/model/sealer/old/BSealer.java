@@ -1,28 +1,23 @@
-package com.dre.brewery;
+package com.dre.brewery.model.sealer.old;
 
+import com.dre.brewery.Brew;
+import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
-import org.bukkit.Tag;
-import org.bukkit.block.Block;
-import org.bukkit.block.Container;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Iterator;
 
 /**
  * The Sealing Inventory that is being checked for Brews and seals them after a second.
  * <p>Class doesn't load in mc 1.12 and lower (Can't find RecipeChoice, BlockData and NamespacedKey)
  */
-public class BSealer implements InventoryHolder {
+public class BSealer implements BrewerySealer {
 	public static final NamespacedKey TAG_KEY = new NamespacedKey(BreweryPlugin.getInstance(), "SealingTable");
 	public static final NamespacedKey LEGACY_TAG_KEY = new NamespacedKey("brewery", "sealingtable"); // Do not capitalize
 	public static boolean recipeRegistered = false;
@@ -34,6 +29,8 @@ public class BSealer implements InventoryHolder {
 	private ItemStack[] contents = null;
 	private MyScheduledTask task;
 
+	//TODO @Jsinco, note how there is only one usage of this constructor now. Please refer to its usage for the next
+	//	   note.
 	public BSealer(Player player) {
 		this.player = player;
 		if (inventoryHolderWorking) {
@@ -54,7 +51,7 @@ public class BSealer implements InventoryHolder {
 		return inventory;
 	}
 
-
+	@Override
 	public void clickInv() {
 		contents = null;
 		if (task == null) {
@@ -62,6 +59,7 @@ public class BSealer implements InventoryHolder {
 		}
 	}
 
+	@Override
 	public void closeInv() {
 		if (task != null) {
 			task.cancel();
@@ -105,66 +103,6 @@ public class BSealer implements InventoryHolder {
 		}
 	}
 
-	public static boolean isBSealer(Block block) {
-		if (BreweryPlugin.getMCVersion().isOrLater(MinecraftVersion.V1_14) && block.getType() == Material.SMOKER) {
-			Container smoker = (Container) block.getState();
-			if (smoker.getCustomName() != null) {
-				if (smoker.getCustomName().equals("§e" + BreweryPlugin.getInstance().languageReader.get("Etc_SealingTable"))) {
-					return true;
-				} else {
-					return smoker.getPersistentDataContainer().has(TAG_KEY, PersistentDataType.BYTE) || smoker.getPersistentDataContainer().has(LEGACY_TAG_KEY, PersistentDataType.BYTE);
-				}
-			}
-		}
-		return false;
-	}
 
-	public static void blockPlace(ItemStack item, Block block) {
-		if (item.getType() == Material.SMOKER && item.hasItemMeta()) {
-			ItemMeta itemMeta = item.getItemMeta();
-			assert itemMeta != null;
-			if ((itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals("§e" + BreweryPlugin.getInstance().languageReader.get("Etc_SealingTable"))) ||
-				itemMeta.getPersistentDataContainer().has(BSealer.TAG_KEY, PersistentDataType.BYTE)) {
-				Container smoker = (Container) block.getState();
-				// Rotate the Block 180° so it doesn't look like a Smoker
-				Directional dir = (Directional) smoker.getBlockData();
-				dir.setFacing(dir.getFacing().getOppositeFace());
-				smoker.setBlockData(dir);
-				smoker.getPersistentDataContainer().set(BSealer.TAG_KEY, PersistentDataType.BYTE, (byte)1);
-				smoker.update();
-			}
-		}
-	}
 
-	public static void registerRecipe() {
-		recipeRegistered = true;
-		ItemStack sealingTableItem = new ItemStack(Material.SMOKER);
-		ItemMeta meta = BreweryPlugin.getInstance().getServer().getItemFactory().getItemMeta(Material.SMOKER);
-		if (meta == null) return;
-		meta.setDisplayName("§e" + BreweryPlugin.getInstance().languageReader.get("Etc_SealingTable"));
-		meta.getPersistentDataContainer().set(TAG_KEY, PersistentDataType.BYTE, (byte)1);
-		sealingTableItem.setItemMeta(meta);
-
-		ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(BreweryPlugin.getInstance(), "SealingTable"), sealingTableItem);
-		recipe.shape("bb ",
-					"ww ",
-					"ww ");
-		recipe.setIngredient('b', Material.GLASS_BOTTLE);
-		recipe.setIngredient('w', new RecipeChoice.MaterialChoice(Tag.PLANKS));
-
-		BreweryPlugin.getInstance().getServer().addRecipe(recipe);
-	}
-
-	public static void unregisterRecipe() {
-		recipeRegistered = false;
-		//P.p.getServer().removeRecipe(new NamespacedKey(P.p, "SealingTable"));    1.15 Method
-		Iterator<Recipe> recipeIterator = BreweryPlugin.getInstance().getServer().recipeIterator();
-		while (recipeIterator.hasNext()) {
-			Recipe next = recipeIterator.next();
-			if (next instanceof ShapedRecipe && (((ShapedRecipe) next).getKey().equals(TAG_KEY) || ((ShapedRecipe) next).getKey().equals(LEGACY_TAG_KEY))) {
-				recipeIterator.remove();
-				return;
-			}
-		}
-	}
 }

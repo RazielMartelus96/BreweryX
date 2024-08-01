@@ -6,6 +6,7 @@ import com.dre.brewery.api.events.barrel.BarrelDestroyEvent;
 import com.dre.brewery.filedata.BConfig;
 import com.dre.brewery.filedata.BData;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
+import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;
@@ -67,7 +68,7 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (VERSION.isOrEarlier(MinecraftVersion.V1_14) || event.getBlock().getType() != Material.SMOKER) return;
-		BSealer.blockPlace(event.getItemInHand(), event.getBlock());
+		BrewerySealer.blockPlace(event.getItemInHand(), event.getBlock());
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
