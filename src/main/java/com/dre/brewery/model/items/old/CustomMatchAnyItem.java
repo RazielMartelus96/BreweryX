@@ -1,5 +1,6 @@
-package com.dre.brewery.recipe;
+package com.dre.brewery.model.items.old;
 
+import com.dre.brewery.recipe.Ingredient;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
