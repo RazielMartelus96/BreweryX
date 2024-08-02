@@ -5,7 +5,7 @@ import com.dre.brewery.recipe.BEffect;
 import com.dre.brewery.BIngredients;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.Brew;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.inventory.meta.PotionMeta;

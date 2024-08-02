@@ -2,7 +2,7 @@ package com.dre.brewery.utility;
 
 import com.dre.brewery.BPlayer;
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 
 import java.sql.*;
 import java.util.UUID;

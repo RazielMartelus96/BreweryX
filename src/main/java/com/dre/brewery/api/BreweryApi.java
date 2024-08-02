@@ -2,7 +2,7 @@ package com.dre.brewery.api;
 
 import com.dre.brewery.BCauldron;
 import com.dre.brewery.BPlayer;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.Barrel;

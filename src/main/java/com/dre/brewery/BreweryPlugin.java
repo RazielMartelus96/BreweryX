@@ -24,7 +24,8 @@ package com.dre.brewery;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.commands.CommandManager;
 import com.dre.brewery.commands.CommandUtil;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
+import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.filedata.BData;
 import com.dre.brewery.filedata.DataSave;
 import com.dre.brewery.filedata.LanguageReader;
@@ -146,7 +147,7 @@ public class BreweryPlugin extends JavaPlugin {
 				errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
 				return;
 			}
-			BConfig.readConfig(cfg);
+			BConfig.getInstance().readConfig(cfg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
@@ -184,7 +185,7 @@ public class BreweryPlugin extends JavaPlugin {
 		if (BConfig.hasShopKeepers) {
 			getServer().getPluginManager().registerEvents(new ShopKeepersListener(), this);
 		}
-		if (BConfig.hasSlimefun && getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.SLIME_FUN) && getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
 			getServer().getPluginManager().registerEvents(new SlimefunListener(), this);
 		}
 
@@ -265,7 +266,7 @@ public class BreweryPlugin extends JavaPlugin {
 
 		// load the Config
 		try {
-			BConfig.readConfig(cfg);
+			BConfig.getInstance().readConfig(cfg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log("Something went wrong when trying to load the config file! Please check your config.yml");
@@ -307,7 +308,7 @@ public class BreweryPlugin extends JavaPlugin {
 		BConfig.hasMMOItems = null;
 		DistortChat.commands = null;
 		BConfig.drainItems.clear();
-		if (BConfig.useLB) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.LOG_BLOCK)) {
 			try {
 				LogBlockBarrel.clear();
 			} catch (Exception e) {
@@ -446,7 +447,7 @@ public class BreweryPlugin extends JavaPlugin {
 			Barrel.onUpdate();// runs every min to check and update ageing time
 			long t3 = System.nanoTime();
 			if (getMCVersion().isOrLater(MinecraftVersion.V1_14)) MCBarrel.onUpdate();
-			if (BConfig.useBlocklocker) BlocklockerBarrel.clearBarrelSign();
+			if (BConfig.getInstance().isAddonEnabled(AddonType.BLOCK_LOCKER)) BlocklockerBarrel.clearBarrelSign();
 			long t4 = System.nanoTime();
 			BPlayer.onUpdate();// updates players drunkenness
 

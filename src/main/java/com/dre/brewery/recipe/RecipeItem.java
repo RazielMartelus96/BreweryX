@@ -1,7 +1,8 @@
 package com.dre.brewery.recipe;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
+import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;
@@ -273,7 +274,7 @@ public abstract class RecipeItem implements Cloneable {
 				continue;
 			}
 
-			if (mat == null && BConfig.hasVault) {
+			if (mat == null && BConfig.getInstance().isAddonEnabled(AddonType.VAULT)) {
 				try {
 					net.milkbowl.vault.item.ItemInfo vaultItem = net.milkbowl.vault.item.Items.itemByString(ingredParts[0]);
 					if (vaultItem != null) {

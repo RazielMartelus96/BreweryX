@@ -3,7 +3,8 @@ package com.dre.brewery.recipe;
 import com.dre.brewery.BIngredients;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
+import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -257,7 +258,7 @@ public class BRecipe {
 			if (matParts.length == 2) {
 				durability = (short) BreweryPlugin.getInstance().parseInt(matParts[1]);
 			}
-			if (mat == null && BConfig.hasVault) {
+			if (mat == null && BConfig.getInstance().isAddonEnabled(AddonType.VAULT)) {
 				try {
 					net.milkbowl.vault.item.ItemInfo vaultItem = net.milkbowl.vault.item.Items.itemByString(matParts[0]);
 					if (vaultItem != null) {

@@ -1,7 +1,7 @@
 package com.dre.brewery.filedata;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.Tuple;

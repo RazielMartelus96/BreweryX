@@ -1,7 +1,7 @@
 package com.dre.brewery.listeners;
 
 import com.dre.brewery.*;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 import com.dre.brewery.filedata.UpdateChecker;
 import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.model.sealer.SealerFactory;

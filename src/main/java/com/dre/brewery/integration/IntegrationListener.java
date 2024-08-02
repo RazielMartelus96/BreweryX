@@ -5,7 +5,8 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.events.barrel.BarrelAccessEvent;
 import com.dre.brewery.api.events.barrel.BarrelDestroyEvent;
 import com.dre.brewery.api.events.barrel.BarrelRemoveEvent;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
+import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
 import com.dre.brewery.integration.barrel.GriefPreventionBarrel;
 import com.dre.brewery.integration.barrel.LWCBarrel;
@@ -36,7 +37,7 @@ public class IntegrationListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBarrelAccessLowest(BarrelAccessEvent event) {
-		if (BConfig.useWG) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.WORLD_GUARD)) {
 			Plugin plugin = BreweryPlugin.getInstance().getServer().getPluginManager().getPlugin("WorldGuard");
 			if (plugin != null) {
 				try {
@@ -64,7 +65,7 @@ public class IntegrationListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBarrelAccess(BarrelAccessEvent event) {
-		if (BConfig.useGMInventories) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.GAME_MODE_INVENTORIES)) {
 			Plugin pl = BreweryPlugin.getInstance().getServer().getPluginManager().getPlugin("GameModeInventories");
 			if (pl != null && pl.isEnabled()) {
 				try {
@@ -84,13 +85,13 @@ public class IntegrationListener implements Listener {
 					BreweryPlugin.getInstance().errorLog("Failed to Check GameModeInventories for Barrel Open Permissions!");
 					BreweryPlugin.getInstance().errorLog("Players will be able to open Barrel with GameMode Creative");
 					e.printStackTrace();
-					BConfig.useGMInventories = false;
+					BConfig.getInstance().disableAddon(AddonType.GAME_MODE_INVENTORIES);
 				}
 			} else {
-				BConfig.useGMInventories = false;
+				BConfig.getInstance().disableAddon(AddonType.GAME_MODE_INVENTORIES);
 			}
 		}
-		if (BConfig.useGP) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.GRIEF_PREVENTION)) {
 			if (BreweryPlugin.getInstance().getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
 				try {
 					if (!GriefPreventionBarrel.checkAccess(event)) {
@@ -116,7 +117,7 @@ public class IntegrationListener implements Listener {
 			}
 		}
 
-		if (BConfig.useLWC) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.LWC)) {
 			Plugin plugin = BreweryPlugin.getInstance().getServer().getPluginManager().getPlugin("LWC");
 			if (plugin != null) {
 
@@ -151,7 +152,7 @@ public class IntegrationListener implements Listener {
 			}
 		}
 
-		if (BConfig.useTowny) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.TOWNY)) {
 			if (BreweryPlugin.getInstance().getServer().getPluginManager().isPluginEnabled("Towny")) {
 				try {
 					if (!TownyBarrel.checkAccess(event)) {
@@ -177,7 +178,7 @@ public class IntegrationListener implements Listener {
 			}
 		}
 
-		if (BConfig.useBlocklocker) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.BLOCK_LOCKER)) {
 			if (BreweryPlugin.getInstance().getServer().getPluginManager().isPluginEnabled("BlockLocker")) {
 				try {
 					if (!BlocklockerBarrel.checkAccess(event)) {
@@ -243,7 +244,7 @@ public class IntegrationListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
 	public void onBarrelDestroy(BarrelDestroyEvent event) {
-		if (!BConfig.useLWC) return;
+		if (!BConfig.getInstance().isAddonEnabled(AddonType.LWC)) return;
 
 		if (event.hasPlayer()) {
 			Player player = event.getPlayerOptional();
@@ -288,7 +289,7 @@ public class IntegrationListener implements Listener {
 
 	@EventHandler
 	public void onBarrelRemove(BarrelRemoveEvent event) {
-		if (!BConfig.useLWC) return;
+		if (!BConfig.getInstance().isAddonEnabled(AddonType.LWC)) return;
 
 		try {
 			LWCBarrel.remove(event.getBarrel());
@@ -301,7 +302,7 @@ public class IntegrationListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if (BConfig.useLB) {
+		if (BConfig.getInstance().isAddonEnabled(AddonType.LOG_BLOCK)) {
 			if (event.getInventory().getHolder() instanceof Barrel) {
 				try {
 					LogBlockBarrel.closeBarrel(event.getPlayer(), event.getInventory());

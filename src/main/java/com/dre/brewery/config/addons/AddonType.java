@@ -1,8 +1,8 @@
-package com.dre.brewery.filedata.config.addons;
+package com.dre.brewery.config.addons;
 
 /**
  * Enum representing the type of third party addon plugin and its current state (enabled or not) within the Plugin, as
- * per settings determined within the {@linkplain com.dre.brewery.filedata.config.BConfig Config File}.
+ * per settings determined within the {@linkplain com.dre.brewery.config.BConfig Config File}.
  */
 public enum AddonType {
 
@@ -14,7 +14,11 @@ public enum AddonType {
 	GAME_MODE_INVENTORIES(null,"useGMInventories", false),
 	CITADEL("Citadel","useCitadel", false),
 	BLOCK_LOCKER("BlockLocker","useBlockLocker", false),
-	VIRTUAL_CHEST_PERMS(null,"useVirtualChestPerms", false);
+	VIRTUAL_CHEST_PERMS(null,"useVirtualChestPerms", false),
+	VAULT("Vault",null, false),
+	CHEST_SHOP("ChestShop",null, false),
+	SHOP_KEEPERS("ShopKeepers",null, false),
+	SLIME_FUN("Slimefun",null, false);
 
 	private String name;
 	private String key;

@@ -1,4 +1,4 @@
-package com.dre.brewery.filedata.config;
+package com.dre.brewery.config;
 
 import com.dre.brewery.*;
 import com.dre.brewery.BreweryPlugin;
@@ -6,7 +6,7 @@ import com.dre.brewery.api.events.ConfigLoadEvent;
 import com.dre.brewery.filedata.ConfigUpdater;
 import com.dre.brewery.filedata.DataSave;
 import com.dre.brewery.filedata.LanguageReader;
-import com.dre.brewery.filedata.config.addons.AddonType;
+import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
 import com.dre.brewery.integration.barrel.WGBarrel;
 import com.dre.brewery.integration.barrel.WGBarrel5;
@@ -41,24 +41,29 @@ import java.util.stream.Collectors;
 
 public class BConfig {
 
+	/**
+	 * Instance of the ConfigHandler, as per the singleton design pattern.
+	 */
+	private static BConfig instance;
+
+	/**
+	 * Gets the singleton instance of the ConfigHandler.
+	 * @return The ConfigHandler instance.
+	 */
+	public static BConfig getInstance() {
+		if (instance == null) {
+			instance = new BConfig();
+		}
+		return instance;
+	}
 	private static final MinecraftVersion VERSION = BreweryPlugin.getMCVersion();
 
 	public static final String configVersion = "3.1";
 	public static boolean updateCheck;
 	public static CommandSender reloader;
-	private static Map<AddonType, Boolean> useAddonMap = new HashMap<>();
+	private final Map<AddonType, Boolean> addonEnabledMap = new HashMap<>();
 	// Third Party Enabled
-	public static boolean useWG; //WorldGuard
 	public static WGBarrel wg;
-	public static boolean useLWC; //LWC
-	public static boolean useLB; //LogBlock
-	public static boolean useGP; //GriefPrevention
-	public static boolean useTowny; //Towny
-	public static boolean useBlocklocker; //LockBlocker
-	public static boolean hasVault; // Vault
-	public static boolean useCitadel; // CivCraft/DevotedMC Citadel
-	public static boolean useGMInventories; // GamemodeInventories
-	public static boolean hasSlimefun; // Slimefun
 	public static Boolean hasMMOItems = null; // MMOItems ; Null if not checked
 	public static boolean hasChestShop;
 	public static boolean hasShopKeepers;
@@ -198,7 +203,12 @@ public class BConfig {
 		return null;
 	}
 
-	public static void readConfig(FileConfiguration config) {
+	//TODO replace all uses of static values throughout the plugin.
+	public boolean isAddonEnabled(AddonType type){
+		return addonEnabledMap.get(type);
+	}
+	public void disableAddon(AddonType addonType){this.addonEnabledMap.put(addonType,false);}
+	public void readConfig(FileConfiguration config) {
 		// Set the Language
 		breweryPlugin.language = config.getString("language", "en");
 
@@ -225,15 +235,8 @@ public class BConfig {
 
 		PluginManager pluginManager = breweryPlugin.getServer().getPluginManager();
 
-		// Third-Party
 		initAddons(config, pluginManager);
 
-		// The item util has been removed in Vault 1.7+
-		hasVault = pluginManager.isPluginEnabled("Vault")
-			&& Integer.parseInt(pluginManager.getPlugin("Vault").getDescription().getVersion().split("\\.")[1]) <= 6;
-		hasChestShop = pluginManager.isPluginEnabled("ChestShop");
-		hasShopKeepers = pluginManager.isPluginEnabled("Shopkeepers");
-		hasSlimefun = pluginManager.isPluginEnabled("Slimefun");
 
 		// various Settings
 		DataSave.autosave = config.getInt("autosave", 3);
@@ -345,7 +348,7 @@ public class BConfig {
 				if (drainSplit.length > 1) {
 					Material mat = BUtil.getMaterialSafely(drainSplit[0]);
 					int strength = breweryPlugin.parseInt(drainSplit[1]);
-					if (mat == null && hasVault && strength > 0) {
+					if (mat == null && isAddonEnabled(AddonType.VAULT) && strength > 0) {
 						try {
 							net.milkbowl.vault.item.ItemInfo vaultItem = net.milkbowl.vault.item.Items.itemByString(drainSplit[0]);
 							if (vaultItem != null) {
@@ -390,7 +393,7 @@ public class BConfig {
 		}
 
 		//TODO jesus christ what even is this?!? The whole world guard impl needs fixing asap!
-		if (useWG) {
+		if (isAddonEnabled(AddonType.WORLD_GUARD)) {
 			Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
 			if (plugin != null) {
 				String wgv = plugin.getDescription().getVersion();
@@ -408,13 +411,13 @@ public class BConfig {
 				BreweryPlugin.getInstance().errorLog("Disable the WorldGuard support in the config and do /brew reload");
 			}
 		}
-		if (useBlocklocker) {
+		if (isAddonEnabled(AddonType.BLOCK_LOCKER)) {
 			try {
 				Class.forName("nl.rutgerkok.blocklocker.BlockLockerAPIv2");
 				Class.forName("nl.rutgerkok.blocklocker.ProtectableBlocksSettings");
 				BlocklockerBarrel.registerBarrelAsProtectable();
 			} catch (ClassNotFoundException e) {
-				useBlocklocker = false;
+				addonEnabledMap.put(AddonType.BLOCK_LOCKER,false);
 				BreweryPlugin.getInstance().log("Unsupported Version of 'BlockLocker', locking Brewery Barrels disabled");
 			}
 		}
@@ -451,18 +454,24 @@ public class BConfig {
 
 	}
 
-	private static void initAddons(FileConfiguration config, PluginManager pluginManager){
+	private void initAddons(FileConfiguration config, PluginManager pluginManager){
 		Arrays.stream(AddonType.values()).forEach(addon->{
 			boolean isEnabled;
+			boolean isUsed;
 			if(addon.getName() != null){
 				isEnabled = pluginManager.isPluginEnabled(addon.getName());
 			}
 			else{
 				isEnabled = true;
 			}
-			useAddonMap.put(addon,config
+			if(addon.getKey() == null){
+				isUsed = true;
+			}
+			else{isUsed = config
 				.getBoolean(
-					addon.getKey(), true) && isEnabled);
+					addon.getKey(),true);}
+
+			this.addonEnabledMap.put(addon, isUsed && isEnabled);
 
 		});
 	}

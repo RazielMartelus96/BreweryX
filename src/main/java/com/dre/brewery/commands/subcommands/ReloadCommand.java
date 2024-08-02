@@ -6,7 +6,7 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.addons.AddonManager;
 import com.dre.brewery.commands.CommandUtil;
 import com.dre.brewery.commands.SubCommand;
-import com.dre.brewery.filedata.config.BConfig;
+import com.dre.brewery.config.BConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,7 +38,7 @@ public class ReloadCommand implements SubCommand {
 
 		// load the Config
 		try {
-			BConfig.readConfig(cfg);
+			BConfig.getInstance().readConfig(cfg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			breweryPlugin.log("Something went wrong when trying to load the config file! Please check your config.yml");
