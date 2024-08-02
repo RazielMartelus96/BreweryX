@@ -1,15 +1,13 @@
-package com.dre.brewery.recipe;
+package com.dre.brewery.model.effect.old;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.model.effect.BrewEffect;
-import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class BEffect implements BrewEffect{
+public class BEffect implements BrewEffect {
 
 	private final PotionEffectType type;
 	private short minlvl;
