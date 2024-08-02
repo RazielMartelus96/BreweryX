@@ -1,6 +1,7 @@
 package com.dre.brewery.recipe;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.model.effect.BrewEffect;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.entity.Player;
@@ -8,7 +9,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class BEffect {
+public class BEffect implements BrewEffect{
 
 	private final PotionEffectType type;
 	private short minlvl;
@@ -94,6 +95,7 @@ public class BEffect {
 		}
 	}
 
+	@Override
 	public PotionEffect generateEffect(int quality) {
 		int duration = calcDuration(quality);
 		int lvl = calcLvl(quality);
@@ -111,6 +113,7 @@ public class BEffect {
 		return type.createEffect(duration, lvl - 1);
 	}
 
+	@Override
 	public void apply(int quality, Player player) {
 		PotionEffect effect = generateEffect(quality);
 		if (effect != null) {
@@ -118,14 +121,17 @@ public class BEffect {
 		}
 	}
 
+	@Override
 	public int calcDuration(float quality) {
 		return (int) Math.round(minduration + ((maxduration - minduration) * (quality / 10.0)));
 	}
 
+	@Override
 	public int calcLvl(float quality) {
 		return (int) Math.round(minlvl + ((maxlvl - minlvl) * (quality / 10.0)));
 	}
 
+	@Override
 	public void writeInto(PotionMeta meta, int quality) {
 		if ((calcDuration(quality) > 0 || type.isInstant()) && calcLvl(quality) > 0) {
 			meta.addCustomEffect(type.createEffect(0, 0), true);
@@ -134,14 +140,17 @@ public class BEffect {
 		}
 	}
 
+	@Override
 	public boolean isValid() {
 		return type != null && minlvl >= 0 && maxlvl >= 0 && minduration >= 0 && maxduration >= 0;
 	}
 
+	@Override
 	public boolean isHidden() {
 		return hidden;
 	}
 
+	@Override
 	public PotionEffectType getType() {
 		return type;
 	}
