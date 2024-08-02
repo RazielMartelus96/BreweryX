@@ -2,7 +2,7 @@ package com.dre.brewery.integration.item;
 
 import com.dre.brewery.Brew;
 import com.dre.brewery.recipe.BRecipe;
-import com.dre.brewery.recipe.PluginItem;
+import com.dre.brewery.model.items.old.PluginItem;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 

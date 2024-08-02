@@ -1,7 +1,7 @@
 package com.dre.brewery.api.events;
 
 import com.dre.brewery.BCauldron;
-import com.dre.brewery.recipe.RecipeItem;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.utility.LegacyUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;

@@ -3,7 +3,7 @@ package com.dre.brewery.integration;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.integration.item.SlimefunPluginItem;
 import com.dre.brewery.recipe.BCauldronRecipe;
-import com.dre.brewery.recipe.RecipeItem;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.utility.LegacyUtil;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;

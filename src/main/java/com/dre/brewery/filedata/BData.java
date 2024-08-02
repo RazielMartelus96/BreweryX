@@ -3,7 +3,7 @@ package com.dre.brewery.filedata;
 import com.dre.brewery.*;
 import com.dre.brewery.lore.Base91DecoderStream;
 import com.dre.brewery.recipe.Ingredient;
-import com.dre.brewery.recipe.SimpleItem;
+import com.dre.brewery.model.items.old.SimpleItem;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.BoundingBox;
 import com.dre.brewery.utility.MinecraftVersion;

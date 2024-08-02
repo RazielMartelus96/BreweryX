@@ -1,6 +1,9 @@
 package com.dre.brewery.recipe;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.model.items.old.CustomItem;
+import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.model.items.old.SimpleItem;
 import com.dre.brewery.utility.StringParser;
 import com.dre.brewery.utility.Tuple;
 import org.bukkit.Color;

@@ -2,7 +2,7 @@ package com.dre.brewery.integration.item;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
-import com.dre.brewery.recipe.PluginItem;
+import com.dre.brewery.model.items.old.PluginItem;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.inventory.ItemStack;
 

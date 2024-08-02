@@ -6,7 +6,7 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.commands.SubCommand;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.Ingredient;
-import com.dre.brewery.recipe.RecipeItem;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

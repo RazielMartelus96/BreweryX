@@ -7,7 +7,7 @@ import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.ItemLoader;
-import com.dre.brewery.recipe.RecipeItem;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.recipe.PotionColor;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;

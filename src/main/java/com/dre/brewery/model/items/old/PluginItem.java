@@ -1,6 +1,8 @@
-package com.dre.brewery.recipe;
+package com.dre.brewery.model.items.old;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.recipe.Ingredient;
+import com.dre.brewery.recipe.ItemLoader;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
