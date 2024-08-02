@@ -1,7 +1,7 @@
 package com.dre.brewery.lore;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.recipe.BEffect;
+import com.dre.brewery.model.effect.BrewEffect;
 import com.dre.brewery.BIngredients;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.Brew;
@@ -453,9 +453,9 @@ public class BrewLore {
 	/**
 	 * Adds the Effect names to the Items description
  	 */
-	public void addOrReplaceEffects(List<BEffect> effects, int quality) {
+	public void addOrReplaceEffects(List<BrewEffect> effects, int quality) {
 		if (BreweryPlugin.getMCVersion().isOrEarlier(MinecraftVersion.V1_9) && effects != null) {
-			for (BEffect effect : effects) {
+			for (BrewEffect effect : effects) {
 				if (!effect.isHidden()) {
 					effect.writeInto(meta, quality);
 				}

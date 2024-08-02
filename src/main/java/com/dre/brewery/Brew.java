@@ -4,7 +4,7 @@ import com.dre.brewery.api.events.brew.BrewModifyEvent;
 import com.dre.brewery.filedata.BConfig;
 import com.dre.brewery.filedata.ConfigUpdater;
 import com.dre.brewery.lore.*;
-import com.dre.brewery.recipe.BEffect;
+import com.dre.brewery.model.effect.BrewEffect;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.PotionColor;
 import com.dre.brewery.utility.BUtil;
@@ -436,7 +436,7 @@ public class Brew implements Cloneable {
 	/**
 	 * Get Special Drink Effects
 	 */
-	public List<BEffect> getEffects() {
+	public List<BrewEffect> getEffects() {
 		if (currentRecipe != null && quality > 0) {
 			return currentRecipe.getEffects();
 		}

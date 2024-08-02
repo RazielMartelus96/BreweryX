@@ -6,7 +6,7 @@ import com.dre.brewery.api.events.PlayerPushEvent;
 import com.dre.brewery.api.events.brew.BrewDrinkEvent;
 import com.dre.brewery.filedata.BConfig;
 import com.dre.brewery.lore.BrewLore;
-import com.dre.brewery.recipe.BEffect;
+import com.dre.brewery.model.effect.BrewEffect;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.PermissionUtil;
@@ -764,10 +764,10 @@ public class BPlayer {
 		}
 	}
 
-	public static List<PotionEffect> getBrewEffects(List<BEffect> effects, int quality) {
+	public static List<PotionEffect> getBrewEffects(List<BrewEffect> effects, int quality) {
 		List<PotionEffect> out = new ArrayList<>();
 		if (effects != null) {
-			for (BEffect effect : effects) {
+			for (BrewEffect effect : effects) {
 				PotionEffect e = effect.generateEffect(quality);
 				if (e != null) {
 					out.add(e);
@@ -775,15 +775,6 @@ public class BPlayer {
 			}
 		}
 		return out;
-	}
-
-	public static void addBrewEffects(Brew brew, Player player) {
-		List<BEffect> effects = brew.getEffects();
-		if (effects != null) {
-			for (BEffect effect : effects) {
-				effect.apply(brew.getQuality(), player);
-			}
-		}
 	}
 
 	public void hangoverEffects(final Player player) {

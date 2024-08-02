@@ -4,6 +4,8 @@ import com.dre.brewery.BIngredients;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.model.effect.BrewEffect;
+import com.dre.brewery.model.effect.EffectFactory;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -11,6 +13,7 @@ import com.dre.brewery.utility.StringParser;
 import com.dre.brewery.utility.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -54,7 +57,7 @@ public class BRecipe {
 	private int[] cmData; // Custom Model Data[3] for each quality
 
 	// drinking
-	private List<BEffect> effects = new ArrayList<>(); // Special Effects when drinking
+	private List<BrewEffect> effects = new ArrayList<>(); // Special Effects when drinking
 	private @Nullable List<Tuple<Integer, String>> playercmds; // Commands executed as the player when drinking
 	private @Nullable List<Tuple<Integer, String>> servercmds; // Commands executed as the server when drinking
 	private String drinkMsg; // Message when drinking
@@ -164,7 +167,7 @@ public class BRecipe {
 
 		List<String> effectStringList = configSectionRecipes.getStringList(recipeId + ".effects");
         for (String effectString : effectStringList) {
-            BEffect effect = new BEffect(effectString);
+            BrewEffect effect = new EffectFactory(effectString).create();
             if (effect.isValid()) {
                 recipe.effects.add(effect);
             } else {
@@ -710,7 +713,7 @@ public class BRecipe {
 		return glint;
 	}
 
-	public List<BEffect> getEffects() {
+	public List<BrewEffect> getEffects() {
 		return effects;
 	}
 
@@ -763,7 +766,7 @@ public class BRecipe {
 		this.lore = lore;
 	}
 
-	public void setEffects(List<BEffect> effects) {
+	public void setEffects(List<BrewEffect> effects) {
 		this.effects = effects;
 	}
 
