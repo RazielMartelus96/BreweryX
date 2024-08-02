@@ -1022,7 +1022,7 @@ public class BRecipe {
 			return this;
 		}
 
-		public Builder addEffects(BEffect... effects) {
+		public Builder addEffects(BrewEffect... effects) {
 			Collections.addAll(recipe.effects, effects);
 			return this;
 		}
