@@ -3,6 +3,7 @@ package com.dre.brewery.integration;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.config.BConfig;
+import com.dre.brewery.utility.logging.PluginLogger;
 import com.nisovin.shopkeepers.api.events.PlayerOpenUIEvent;
 import com.nisovin.shopkeepers.api.ui.DefaultUITypes;
 import org.bukkit.Material;
@@ -45,7 +46,7 @@ public class ShopKeepersListener implements Listener {
 		if (item != null && item.getType() == Material.POTION && event.getClickedInventory() == event.getView().getTopInventory()) {
 			Brew brew = Brew.get(item);
 			if (brew != null && !brew.isSealed()) {
-				BreweryPlugin.getInstance().msg(event.getWhoClicked(), BreweryPlugin.getInstance().languageReader.get("Player_ShopSealBrew"));
+				PluginLogger.getInstance().msg(event.getWhoClicked(), BreweryPlugin.getInstance().languageReader.get("Player_ShopSealBrew"));
 			}
 		}
 	}

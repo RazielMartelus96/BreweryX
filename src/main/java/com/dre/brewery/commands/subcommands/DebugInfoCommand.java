@@ -8,6 +8,7 @@ import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.RecipeItem;
 import com.dre.brewery.utility.MinecraftVersion;
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,7 @@ public class DebugInfoCommand implements SubCommand {
             } else {
                 BRecipe recipe = BRecipe.getMatching(recipeName);
                 if (recipe == null) {
-                    BreweryPlugin.getInstance().msg(player, "Could not find Recipe " + recipeName);
+                    PluginLogger.getInstance().msg(player, "Could not find Recipe " + recipeName);
                     return;
                 }
                 BreweryPlugin.getInstance().log("&lIngredients in Recipe " + recipe.getRecipeName() + ":");
@@ -90,7 +91,7 @@ public class DebugInfoCommand implements SubCommand {
                 BreweryPlugin.getInstance().log("ingQlty: " + ingQ + ", cookQlty:" + cookQ + ", cook+DistQlty: " + cookDistQ  + ", ageQlty: " + ageQ);
             }
 
-            BreweryPlugin.getInstance().msg(player, "Debug Info for item written into Log");
+            PluginLogger.getInstance().msg(player, "Debug Info for item written into Log");
         }
     }
 }

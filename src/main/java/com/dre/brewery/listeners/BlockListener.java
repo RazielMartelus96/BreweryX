@@ -10,6 +10,7 @@ import com.dre.brewery.integration.barrel.BlocklockerBarrel;
 import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -29,15 +30,15 @@ public class BlockListener implements Listener {
 		if (hasBarrelLine(lines) || !BConfig.requireKeywordOnSigns) {
 			Player player = event.getPlayer();
 			if (!player.hasPermission("brewery.createbarrel.small") && !player.hasPermission("brewery.createbarrel.big")) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoBarrelCreate"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoBarrelCreate"));
 				return;
 			}
 			if (BData.dataMutex.get() > 0) {
-				BreweryPlugin.getInstance().msg(player, "§cCurrently loading Data");
+				PluginLogger.getInstance().msg(player, "§cCurrently loading Data");
 				return;
 			}
 			if (Barrel.create(event.getBlock(), player)) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_BarrelCreated"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_BarrelCreated"));
 			}
 		}
 	}

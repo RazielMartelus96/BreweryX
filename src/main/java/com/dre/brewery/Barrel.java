@@ -11,6 +11,7 @@ import com.dre.brewery.lore.BrewLore;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.BoundingBox;
 import com.dre.brewery.utility.LegacyUtil;
+import com.dre.brewery.utility.logging.PluginLogger;
 import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -112,12 +113,12 @@ public class Barrel implements InventoryHolder {
 	public boolean hasPermsOpen(Player player, PlayerInteractEvent event) {
 		if (isLarge()) {
 			if (!player.hasPermission("brewery.openbarrel.big")) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoBarrelAccess"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoBarrelAccess"));
 				return false;
 			}
 		} else {
 			if (!player.hasPermission("brewery.openbarrel.small")) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoBarrelAccess"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoBarrelAccess"));
 				return false;
 			}
 		}
@@ -348,12 +349,12 @@ public class Barrel implements InventoryHolder {
 			if (barrel.body.getBrokenBlock(true) == null) {
 				if (LegacyUtil.isSign(spigot.getType())) {
 					if (!player.hasPermission("brewery.createbarrel.small")) {
-						BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoSmallBarrelCreate"));
+						PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoSmallBarrelCreate"));
 						return false;
 					}
 				} else {
 					if (!player.hasPermission("brewery.createbarrel.big")) {
-						BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoBigBarrelCreate"));
+						PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoBigBarrelCreate"));
 						return false;
 					}
 				}

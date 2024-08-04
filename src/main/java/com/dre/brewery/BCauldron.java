@@ -8,6 +8,7 @@ import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.Tuple;
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -170,7 +171,7 @@ public class BCauldron {
 	// fills players bottle with cooked brew
 	public boolean fill(Player player, Block block) {
 		if (!player.hasPermission("brewery.cauldron.fill")) {
-			BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoCauldronFill"));
+			PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoCauldronFill"));
 			return true;
 		}
 		ItemStack potion = ingredients.cook(state, player.getName());
@@ -241,15 +242,15 @@ public class BCauldron {
 	// prints the current cooking time to the player
 	public static void printTime(Player player, Block block) {
 		if (!player.hasPermission("brewery.cauldron.time")) {
-			BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoPermissions"));
+			PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoPermissions"));
 			return;
 		}
 		BCauldron bcauldron = get(block);
 		if (bcauldron != null) {
 			if (bcauldron.state > 1) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CauldronInfo1", "" + bcauldron.state));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CauldronInfo1", "" + bcauldron.state));
 			} else {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CauldronInfo2"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CauldronInfo2"));
 			}
 		}
 	}
@@ -468,7 +469,7 @@ public class BCauldron {
 			if (item == null) return;
 
 			if (!player.hasPermission("brewery.cauldron.insert")) {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoCauldronInsert"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Perms_NoCauldronInsert"));
 				return;
 			}
 			if (ingredientAdd(clickedBlock, item, player)) {

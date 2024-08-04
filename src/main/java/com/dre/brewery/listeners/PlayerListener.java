@@ -9,6 +9,7 @@ import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.PermissionUtil;
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -67,7 +68,7 @@ public class PlayerListener implements Listener {
 				BrewerySealer sealer = new SealerFactory(player).create();
 				event.getPlayer().openInventory(sealer.getInventory());
 			} else {
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_SealingTableDisabled"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_SealingTableDisabled"));
 			}
 			return;
 		}
@@ -86,7 +87,7 @@ public class PlayerListener implements Listener {
 		if (VERSION.isOrLater(MinecraftVersion.V1_14) && type == Material.BARREL) {
 			if (!player.hasPermission("brewery.openbarrel.mc")) {
 				event.setCancelled(true);
-				BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoPermissions"));
+				PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Error_NoPermissions"));
 			}
 			return;
 		}

@@ -4,6 +4,7 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.commands.SubCommand;
 import com.dre.brewery.model.sealer.SealerFactory;
 import com.dre.brewery.utility.MinecraftVersion;
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,7 +14,7 @@ public class SealCommand implements SubCommand {
     @Override
     public void execute(BreweryPlugin breweryPlugin, CommandSender sender, String label, String[] args) {
         if (BreweryPlugin.getMCVersion().isOrEarlier(MinecraftVersion.V1_13)) {
-            BreweryPlugin.getInstance().msg(sender, "Sealing requires minecraft 1.13 or higher");
+            PluginLogger.getInstance().msg(sender, "Sealing requires minecraft 1.13 or higher");
             return;
         }
         Player player = (Player) sender;

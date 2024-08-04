@@ -1,5 +1,6 @@
 package com.dre.brewery;
 
+import com.dre.brewery.utility.logging.PluginLogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Barrel;
@@ -203,7 +204,7 @@ public class MCBarrel {
 			}
 			if (brews >= maxBrews) {
 				event.setCancelled(true);
-				BreweryPlugin.getInstance().msg(event.getWhoClicked(), BreweryPlugin.getInstance().languageReader.get("Player_BarrelFull"));
+				PluginLogger.getInstance().msg(event.getWhoClicked(), BreweryPlugin.getInstance().languageReader.get("Player_BarrelFull"));
 			} else {
 				brews++;
 			}

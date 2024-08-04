@@ -10,6 +10,7 @@ import com.dre.brewery.recipe.BEffect;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.PermissionUtil;
+import com.dre.brewery.utility.logging.PluginLogger;
 import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -358,7 +359,7 @@ public class BPlayer {
 			BreweryPlugin.getScheduler().runTaskLater(() -> passOut(player), 1);
 		} else {
 			addPuke(player, 60 + (int) (Math.random() * 60.0));
-			BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CantDrink"));
+			PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_CantDrink"));
 		}
 	}
 
@@ -528,7 +529,7 @@ public class BPlayer {
 				Location randomLoc = Wakeup.getRandom(player.getLocation());
 				if (randomLoc != null) {
 					player.teleport(randomLoc);
-					BreweryPlugin.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_Wake"));
+					PluginLogger.getInstance().msg(player, BreweryPlugin.getInstance().languageReader.get("Player_Wake"));
 				}
 			}
 			offlineDrunk = 0;

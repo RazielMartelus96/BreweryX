@@ -287,6 +287,9 @@ public class BreweryPlugin extends JavaPlugin {
 			BConfig.reloader.sendMessage(color(BConfig.pluginPrefix + "&cERROR: " + msg));
 		}
 	}
+	public String color(String msg) {
+		return BUtil.color(msg);
+	}
 
 	public int parseInt(String string) {
 		if (string == null) {
@@ -322,9 +325,7 @@ public class BreweryPlugin extends JavaPlugin {
 	}
 
 
-	public String color(String msg) {
-		return BUtil.color(msg);
-	}
+
 
 
 	public static class DrunkRunnable implements Runnable {
