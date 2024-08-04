@@ -50,6 +50,9 @@ import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.ItemLoader;
 import com.dre.brewery.recipe.PluginItem;
 import com.dre.brewery.recipe.SimpleItem;
+import com.dre.brewery.runnables.BreweryRunnable;
+import com.dre.brewery.runnables.CauldronParticles;
+import com.dre.brewery.runnables.DrunkRunnable;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -318,68 +321,6 @@ public class BreweryPlugin extends JavaPlugin {
 			return Float.parseFloat(string);
 		} catch (NumberFormatException ignored) {
 			return 0;
-		}
-	}
-
-
-
-
-
-	public static class DrunkRunnable implements Runnable {
-		@Override
-		public void run() {
-			if (!BPlayer.isEmpty()) {
-				BPlayer.drunkenness();
-			}
-		}
-	}
-
-	public class BreweryRunnable implements Runnable {
-		@Override
-		public void run() {
-			long t1 = System.nanoTime();
-			BConfig.reloader = null;
-            // runs every min to update cooking time
-			Iterator<BCauldron> bCauldronsToRemove = BCauldron.bcauldrons.values().iterator();
-			while (bCauldronsToRemove.hasNext()) {
-				// runs every min to update cooking time
-				BCauldron bCauldron = bCauldronsToRemove.next();
-				BreweryPlugin.getScheduler().runTask(bCauldron.getBlock().getLocation(), () -> {
-					if (!bCauldron.onUpdate()) {
-						bCauldronsToRemove.remove();
-					}
-				});
-			}
-			long t2 = System.nanoTime();
-			Barrel.onUpdate();// runs every min to check and update ageing time
-			long t3 = System.nanoTime();
-			if (getMCVersion().isOrLater(MinecraftVersion.V1_14)) MCBarrel.onUpdate();
-			if (BConfig.getInstance().isAddonEnabled(AddonType.BLOCK_LOCKER)) BlocklockerBarrel.clearBarrelSign();
-			long t4 = System.nanoTime();
-			BPlayer.onUpdate();// updates players drunkenness
-
-			long t5 = System.nanoTime();
-			DataSave.autoSave();
-			long t6 = System.nanoTime();
-
-			debugLog("BreweryRunnable: " +
-				"t1: " + (t2 - t1) / 1000000.0 + "ms" +
-				" | t2: " + (t3 - t2) / 1000000.0 + "ms" +
-				" | t3: " + (t4 - t3) / 1000000.0 + "ms" +
-				" | t4: " + (t5 - t4) / 1000000.0 + "ms" +
-				" | t5: " + (t6 - t5) / 1000000.0 + "ms" );
-		}
-
-	}
-
-	public class CauldronParticles implements Runnable {
-		@Override
-		public void run() {
-			if (!BConfig.enableCauldronParticles) return;
-			if (BConfig.minimalParticles && BCauldron.particleRandom.nextFloat() > 0.5f) {
-				return;
-			}
-			BCauldron.processCookEffects();
 		}
 	}
 
