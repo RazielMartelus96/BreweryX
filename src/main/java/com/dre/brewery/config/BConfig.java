@@ -3,6 +3,7 @@ package com.dre.brewery.config;
 import com.dre.brewery.*;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.events.ConfigLoadEvent;
+import com.dre.brewery.config.addons.ConfigKey;
 import com.dre.brewery.filedata.ConfigUpdater;
 import com.dre.brewery.filedata.DataSave;
 import com.dre.brewery.filedata.LanguageReader;
@@ -26,6 +27,7 @@ import com.dre.brewery.utility.SQLSync;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,6 +64,9 @@ public class BConfig {
 	public static boolean updateCheck;
 	public static CommandSender reloader;
 	private final Map<AddonType, Boolean> addonEnabledMap = new HashMap<>();
+	private final Map<ConfigKey, Object> configValues = new HashMap<>();
+
+
 	// Third Party Enabled
 	public static WGBarrel wg;
 	public static Boolean hasMMOItems = null; // MMOItems ; Null if not checked
@@ -208,6 +213,22 @@ public class BConfig {
 		return addonEnabledMap.get(type);
 	}
 	public void disableAddon(AddonType addonType){this.addonEnabledMap.put(addonType,false);}
+
+	private void loadConfigValue(Configuration config, ConfigKey configKey) {
+		String key = configKey.getKey();
+		Class<?> type = configKey.getType();
+		Object defaultValue = configKey.getDefaultValue();
+
+		if (type == Integer.class) {
+			configValues.put(configKey, config.getInt(key, (Integer) defaultValue));
+		} else if (type == Boolean.class) {
+			configValues.put(configKey, config.getBoolean(key, (Boolean) defaultValue));
+		} else if (type == String.class) {
+			configValues.put(configKey, config.getString(key, (String) defaultValue));
+		} else if (type == List.class) {
+			configValues.put(configKey, config.getStringList(key).isEmpty() ? defaultValue : config.getStringList(key));
+		}
+	}
 	public void readConfig(FileConfiguration config) {
 		// Set the Language
 		breweryPlugin.language = config.getString("language", "en");
@@ -237,39 +258,9 @@ public class BConfig {
 
 		initAddons(config, pluginManager);
 
-
-		// various Settings
-		DataSave.autosave = config.getInt("autosave", 3);
-		BreweryPlugin.debug = config.getBoolean("debug", false);
-		pukeItem = !config.getStringList("pukeItem").isEmpty() ? config.getStringList("pukeItem").stream().map(BUtil::getMaterialSafely).collect(Collectors.toList())
-				: List.of(BUtil.getMaterialSafely(config.getString("pukeItem"))); //Material.matchMaterial(config.getString("pukeItem", "SOUL_SAND"));
-		hangoverTime = config.getInt("hangoverDays", 0) * 24 * 60;
-		overdrinkKick = config.getBoolean("enableKickOnOverdrink", false);
-		enableHome = config.getBoolean("enableHome", false);
-		enableLoginDisallow = config.getBoolean("enableLoginDisallow", false);
-		enablePuke = config.getBoolean("enablePuke", false);
-		pukeDespawntime = config.getInt("pukeDespawntime", 60) * 20;
-		stumbleModifier = ((float) config.getInt("stumblePercent", 100)) / 100f;
-		showStatusOnDrink = config.getBoolean("showStatusOnDrink", false);
-		homeType = config.getString("homeType", null);
-		enableWake = config.getBoolean("enableWake", false);
-		craftSealingTable = config.getBoolean("craftSealingTable", false);
-		enableSealingTable = config.getBoolean("enableSealingTable", false);
-		pluginPrefix = config.getString("pluginPrefix", "&2[Brewery]&f ");
-		colorInBarrels = config.getBoolean("colorInBarrels", false);
-		colorInBrewer = config.getBoolean("colorInBrewer", false);
-		alwaysShowQuality = config.getBoolean("alwaysShowQuality", false);
-		alwaysShowAlc = config.getBoolean("alwaysShowAlc", false);
-		showBrewer = config.getBoolean("showBrewer", false);
-		enableEncode = config.getBoolean("enableEncode", false);
-		openEverywhere = config.getBoolean("openLargeBarrelEverywhere", false);
-		enableCauldronParticles = VERSION.isOrLater(MinecraftVersion.V1_9) && config.getBoolean("enableCauldronParticles", false);
-		minimalParticles = config.getBoolean("minimalParticles", false);
-		useOffhandForCauldron = config.getBoolean("useOffhandForCauldron", false);
-		loadDataAsync = config.getBoolean("loadDataAsync", true);
-		brewHopperDump = config.getBoolean("brewHopperDump", false);
-		agingYearDuration = config.getInt("agingYearDuration", 20);
-		requireKeywordOnSigns = config.getBoolean("requireKeywordOnSigns", true);
+		for (ConfigKey configKey : ConfigKey.values()) {
+			loadConfigValue(config, configKey);
+		}
 
 		if (VERSION.isOrLater(MinecraftVersion.V1_14)) {
 			MCBarrel.maxBrews = config.getInt("maxBrewsInMCBarrels", 6);
@@ -454,6 +445,14 @@ public class BConfig {
 
 	}
 
+	public Object getConfigValue(ConfigKey configKey) {
+		return configValues.getOrDefault(configKey, configKey.getDefaultValue());
+	}
+
+	public <T> T getConfigValue(ConfigKey configKey, Class<T> type) {
+		return type.cast(configValues.getOrDefault(configKey, configKey.getDefaultValue()));
+	}
+
 	private void initAddons(FileConfiguration config, PluginManager pluginManager){
 		Arrays.stream(AddonType.values()).forEach(addon->{
 			boolean isEnabled;
@@ -475,4 +474,6 @@ public class BConfig {
 
 		});
 	}
+
+
 }

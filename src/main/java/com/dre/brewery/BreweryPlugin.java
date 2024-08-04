@@ -111,112 +111,22 @@ public class BreweryPlugin extends JavaPlugin {
 	public void onEnable() {
 		breweryPlugin = this;
 		scheduler = UniversalScheduler.getScheduler(this);
-
-		// Version check
-		minecraftVersion = MinecraftVersion.getIt();
-		log("Minecraft Version: " + minecraftVersion.getVersion());
-		if (minecraftVersion == MinecraftVersion.UNKNOWN) {
-			warningLog("This version of Minecraft is not known to Brewery! Please be wary of bugs or other issues that may occur in this version.");
-		}
-
-		// Todo: find which version MC started using UUIDs
-		String v = Bukkit.getBukkitVersion();
-		useUUID = !v.matches("(^|.*[^.\\d])1\\.[0-6]([^\\d].*|$)") && !v.matches("(^|.*[^.\\d])1\\.7\\.[0-5]([^\\d].*|$)");
-
-		// Load Addons
-		addonManager = new AddonManager(this);
-		addonManager.loadAddons();
-
-
-		// MC 1.13 uses a different NBT API than the newer versions.
-		// We decide here which to use, the new or the old or none at all
-		if (LegacyUtil.initNbt()) {
-			useNBT = true;
-		}
-
-		if (getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
-			// Campfires are weird
-			// Initialize once now so it doesn't lag later when we check for campfires under Cauldrons
-			getServer().createBlockData(Material.CAMPFIRE);
-		}
-
-		// load the Config
-		try {
-			FileConfiguration cfg = BConfig.loadConfigFile();
-			if (cfg == null) {
-				errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
-				return;
-			}
-			BConfig.getInstance().readConfig(cfg);
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
-			return;
-		}
-
-		// Register Item Loaders
-		CustomItem.registerItemLoader(this);
-		SimpleItem.registerItemLoader(this);
-		PluginItem.registerItemLoader(this);
-
-		// Read data files
+		versionCheck();
+		initAddonManager();
+		initConfig();
+		initItemLoaders();
 		BData.readData();
-
-		// Setup Metrics
 		stats.setupBStats();
-
-
 		getCommand("breweryx").setExecutor(new CommandManager());
-		// Listeners
-		playerListener = new PlayerListener();
-
-		getServer().getPluginManager().registerEvents(new BlockListener(), this);
-		getServer().getPluginManager().registerEvents(playerListener, this);
-		getServer().getPluginManager().registerEvents(new EntityListener(), this);
-		getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-		getServer().getPluginManager().registerEvents(new WorldListener(), this);
-		getServer().getPluginManager().registerEvents(new IntegrationListener(), this);
-		if (getMCVersion().isOrLater(MinecraftVersion.V1_9)) {
-			getServer().getPluginManager().registerEvents(new CauldronListener(), this);
-		}
-		if (BConfig.hasChestShop && getMCVersion().isOrLater(MinecraftVersion.V1_13)) {
-			getServer().getPluginManager().registerEvents(new ChestShopListener(), this);
-		}
-		if (BConfig.hasShopKeepers) {
-			getServer().getPluginManager().registerEvents(new ShopKeepersListener(), this);
-		}
-		if (BConfig.getInstance().isAddonEnabled(AddonType.SLIME_FUN) && getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
-			getServer().getPluginManager().registerEvents(new SlimefunListener(), this);
-		}
-
-		// Heartbeat
-		BreweryPlugin.getScheduler().runTaskTimer(new BreweryRunnable(), 650, 1200);
-		BreweryPlugin.getScheduler().runTaskTimer(new DrunkRunnable(), 120, 120);
-
-		if (getMCVersion().isOrLater(MinecraftVersion.V1_9)) {
-			BreweryPlugin.getScheduler().runTaskTimer(new CauldronParticles(), 1, 1);
-		}
-
-
+		registerListeners();
+		initHeartbeat();
 		if (BConfig.updateCheck) {
-			new UpdateChecker(RESOURCE_ID).query(latestVersion -> {
-				String currentVersion = getDescription().getVersion();
-
-				if (UpdateChecker.parseVersion(latestVersion) > UpdateChecker.parseVersion(currentVersion)) {
-					UpdateChecker.setUpdateAvailable(true);
-					UpdateChecker.setLatestVersion(latestVersion);
-					log(languageReader.get("Etc_UpdateAvailable", "v" + currentVersion, "v" + latestVersion));
-				}
-			});
+			initUpdateChecker();
 		}
-
-		// Register PlaceholderAPI Placeholders
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			new PlaceholderAPI().register();
 		}
-
-		log("Using scheduler: " + scheduler.getClass().getSimpleName());
-		log(this.getDescription().getName() + " enabled!");
+		logSuccesfulInit();
 	}
 
 	@Override
@@ -416,7 +326,6 @@ public class BreweryPlugin extends JavaPlugin {
 		return BUtil.color(msg);
 	}
 
-	// Runnables
 
 	public static class DrunkRunnable implements Runnable {
 		@Override
@@ -474,6 +383,103 @@ public class BreweryPlugin extends JavaPlugin {
 			}
 			BCauldron.processCookEffects();
 		}
+	}
+
+	private void versionCheck(){
+		minecraftVersion = MinecraftVersion.getIt();
+		log("Minecraft Version: " + minecraftVersion.getVersion());
+		if (minecraftVersion == MinecraftVersion.UNKNOWN) {
+			warningLog("This version of Minecraft is not known to Brewery! Please be wary of bugs or other issues that may occur in this version.");
+		}
+
+		// Todo: find which version MC started using UUIDs
+		String v = Bukkit.getBukkitVersion();
+		useUUID = !v.matches("(^|.*[^.\\d])1\\.[0-6]([^\\d].*|$)") && !v.matches("(^|.*[^.\\d])1\\.7\\.[0-5]([^\\d].*|$)");
+		// MC 1.13 uses a different NBT API than the newer versions.
+		// We decide here which to use, the new or the old or none at all
+		if (LegacyUtil.initNbt()) {
+			useNBT = true;
+		}
+
+		if (getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
+			// Campfires are weird
+			// Initialize once now so it doesn't lag later when we check for campfires under Cauldrons
+			getServer().createBlockData(Material.CAMPFIRE);
+		}
+	}
+
+	private void initAddonManager(){
+		addonManager = new AddonManager(this);
+		addonManager.loadAddons();
+	}
+
+	private void initConfig(){
+		try {
+			FileConfiguration cfg = BConfig.loadConfigFile();
+			if (cfg == null) {
+				errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
+				return;
+			}
+			BConfig.getInstance().readConfig(cfg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
+			return;
+		}
+	}
+	private void initItemLoaders(){
+		CustomItem.registerItemLoader(this);
+		SimpleItem.registerItemLoader(this);
+		PluginItem.registerItemLoader(this);
+	}
+
+	private void registerListeners(){
+		playerListener = new PlayerListener();
+		getServer().getPluginManager().registerEvents(new BlockListener(), this);
+		getServer().getPluginManager().registerEvents(playerListener, this);
+		getServer().getPluginManager().registerEvents(new EntityListener(), this);
+		getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+		getServer().getPluginManager().registerEvents(new WorldListener(), this);
+		getServer().getPluginManager().registerEvents(new IntegrationListener(), this);
+		if (getMCVersion().isOrLater(MinecraftVersion.V1_9)) {
+			getServer().getPluginManager().registerEvents(new CauldronListener(), this);
+		}
+		if (BConfig.hasChestShop && getMCVersion().isOrLater(MinecraftVersion.V1_13)) {
+			getServer().getPluginManager().registerEvents(new ChestShopListener(), this);
+		}
+		if (BConfig.hasShopKeepers) {
+			getServer().getPluginManager().registerEvents(new ShopKeepersListener(), this);
+		}
+		if (BConfig.getInstance().isAddonEnabled(AddonType.SLIME_FUN) && getMCVersion().isOrLater(MinecraftVersion.V1_14)) {
+			getServer().getPluginManager().registerEvents(new SlimefunListener(), this);
+		}	}
+
+	private void initHeartbeat(){
+		BreweryPlugin.getScheduler().runTaskTimer(new BreweryRunnable(), 650, 1200);
+		BreweryPlugin.getScheduler().runTaskTimer(new DrunkRunnable(), 120, 120);
+
+		if (getMCVersion().isOrLater(MinecraftVersion.V1_9)) {
+			BreweryPlugin.getScheduler().runTaskTimer(new CauldronParticles(), 1, 1);
+		}
+	}
+
+	private void initUpdateChecker(){
+
+		new UpdateChecker(RESOURCE_ID).query(latestVersion -> {
+			String currentVersion = getDescription().getVersion();
+
+			if (UpdateChecker.parseVersion(latestVersion) > UpdateChecker.parseVersion(currentVersion)) {
+				UpdateChecker.setUpdateAvailable(true);
+				UpdateChecker.setLatestVersion(latestVersion);
+				log(languageReader.get("Etc_UpdateAvailable", "v" + currentVersion, "v" + latestVersion));
+			}
+		});
+	}
+
+
+	private void logSuccesfulInit(){
+		log("Using scheduler: " + scheduler.getClass().getSimpleName());
+		log(this.getDescription().getName() + " enabled!");
 	}
 
 }
