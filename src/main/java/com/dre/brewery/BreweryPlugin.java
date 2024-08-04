@@ -54,6 +54,7 @@ import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.integration.bstats.Stats;
+import com.dre.brewery.utility.logging.PluginLogger;
 import com.github.Anon8281.universalScheduler.UniversalScheduler;
 import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import org.bukkit.Bukkit;
@@ -277,10 +278,6 @@ public class BreweryPlugin extends JavaPlugin {
 		}
 	}
 
-	public void warningLog(String msg) {
-		Bukkit.getConsoleSender().sendMessage(color(BConfig.pluginPrefix + "&eWARNING: " + msg));
-	}
-
 	public void errorLog(String msg) {
 		Bukkit.getConsoleSender().sendMessage(color(BConfig.pluginPrefix + "&cERROR: " + msg));
 		if (BConfig.reloader != null) {
@@ -390,7 +387,7 @@ public class BreweryPlugin extends JavaPlugin {
 		minecraftVersion = MinecraftVersion.getIt();
 		log("Minecraft Version: " + minecraftVersion.getVersion());
 		if (minecraftVersion == MinecraftVersion.UNKNOWN) {
-			warningLog("This version of Minecraft is not known to Brewery! Please be wary of bugs or other issues that may occur in this version.");
+			PluginLogger.getInstance().warningLog("This version of Minecraft is not known to Brewery! Please be wary of bugs or other issues that may occur in this version.");
 		}
 
 		// Todo: find which version MC started using UUIDs
