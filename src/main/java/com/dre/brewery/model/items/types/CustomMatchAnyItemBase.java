@@ -1,5 +1,6 @@
-package com.dre.brewery.model.items.old;
+package com.dre.brewery.model.items.types;
 
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.recipe.Ingredient;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,7 +48,7 @@ public class CustomMatchAnyItemBase extends BaseRecipeItem {
 		return materials;
 	}
 
-	protected void setMaterials(List<Material> materials) {
+	public void setMaterials(List<Material> materials) {
 		this.materials = materials;
 	}
 
@@ -56,7 +57,7 @@ public class CustomMatchAnyItemBase extends BaseRecipeItem {
 		return names;
 	}
 
-	protected void setNames(List<String> names) {
+	public void setNames(List<String> names) {
 		this.names = names;
 	}
 
@@ -65,7 +66,7 @@ public class CustomMatchAnyItemBase extends BaseRecipeItem {
 		return lore;
 	}
 
-	protected void setLore(List<String> lore) {
+	public void setLore(List<String> lore) {
 		this.lore = lore;
 	}
 
@@ -74,7 +75,7 @@ public class CustomMatchAnyItemBase extends BaseRecipeItem {
 		return customModelDatas;
 	}
 
-	protected void setCustomModelDatas(List<Integer> customModelDatas) {
+	public void setCustomModelDatas(List<Integer> customModelDatas) {
 		this.customModelDatas = customModelDatas;
 	}
 

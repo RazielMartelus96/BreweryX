@@ -1,6 +1,7 @@
-package com.dre.brewery.model.items.old;
+package com.dre.brewery.model.items.types;
 
 import com.dre.brewery.BreweryPlugin;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.ItemLoader;
 import com.dre.brewery.utility.MinecraftVersion;

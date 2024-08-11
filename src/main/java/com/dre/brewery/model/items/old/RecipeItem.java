@@ -2,6 +2,9 @@ package com.dre.brewery.model.items.old;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
+import com.dre.brewery.model.items.types.CustomItemBase;
+import com.dre.brewery.model.items.types.CustomMatchAnyItemBase;
+import com.dre.brewery.model.items.types.SimpleItemBase;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.utility.BUtil;
