@@ -16,7 +16,7 @@ import java.util.Objects;
  * Custom Item that matches any one of the given info.
  * <p>Does not implement Ingredient, as it can not directly be added to an ingredient
  */
-public class CustomMatchAnyItem extends RecipeItem {
+public class CustomMatchAnyItemBase extends BaseRecipeItem {
 
 	private List<Material> materials;
 	private List<String> names;
@@ -85,45 +85,45 @@ public class CustomMatchAnyItem extends RecipeItem {
 		// We only use the one part of this item that actually matched the given item to add to ingredients
 		Material mat = getMaterialMatch(forItem);
 		if (mat != null) {
-			return new CustomItem(mat);
+			return new CustomItemBase(mat);
 		}
 		String name = getNameMatch(forItem);
 		if (name != null) {
-			return new CustomItem(null, name, null);
+			return new CustomItemBase(null, name, null);
 		}
 		String l = getLoreMatch(forItem);
 		if (l != null) {
 			List<String> lore = new ArrayList<>(1);
 			lore.add(l);
-			return new CustomItem(null, null, lore);
+			return new CustomItemBase(null, null, lore);
 		}
 		Integer cmData = getCustomModelDataMatch(forItem);
 		if (cmData != null) {
-			return new CustomItem(null, null, null, cmData);
+			return new CustomItemBase(null, null, null, cmData);
 		}
 
 		// Shouldnt happen
-		return new SimpleItem(Material.GOLDEN_HOE);
+		return new SimpleItemBase(Material.GOLDEN_HOE);
 	}
 
 	@NotNull
 	@Override
 	public Ingredient toIngredientGeneric() {
 		if (hasMaterials()) {
-			return new CustomItem(materials.get(0));
+			return new CustomItemBase(materials.get(0));
 		}
 		if (hasNames()) {
-			return new CustomItem(null, names.get(0), null);
+			return new CustomItemBase(null, names.get(0), null);
 		}
 		if (hasLore()) {
-			return new CustomItem(null, null, new ArrayList<>(List.of(lore.get(0))));
+			return new CustomItemBase(null, null, new ArrayList<>(List.of(lore.get(0))));
 		}
 		if (hasCustomModelDatas()) {
-			return new CustomItem(null, null, null, customModelDatas.get(0));
+			return new CustomItemBase(null, null, null, customModelDatas.get(0));
 		}
 
 		// Shouldnt happen
-		return new SimpleItem(Material.GOLDEN_HOE);
+		return new SimpleItemBase(Material.GOLDEN_HOE);
 	}
 
 	public Material getMaterialMatch(ItemStack item) {
@@ -228,9 +228,9 @@ public class CustomMatchAnyItem extends RecipeItem {
 	@Override
 	public boolean matches(Ingredient ingredient) {
 		// Ingredient can not be CustomMatchAnyItem, so we don't need to/can't check for similarity.
-		if (ingredient instanceof CustomItem) {
+		if (ingredient instanceof CustomItemBase) {
 			// If the custom item has any of our data, we match
-			CustomItem ci = ((CustomItem) ingredient);
+			CustomItemBase ci = ((CustomItemBase) ingredient);
 			if (hasMaterials() && ci.hasMaterials()) {
 				if (materials.contains(ci.getMaterial())) {
 					return true;
@@ -247,7 +247,7 @@ public class CustomMatchAnyItem extends RecipeItem {
 			if (hasCustomModelDatas() && ci.hasCustomModelData()) {
 				return getCustomModelDataMatch(ci.getCustomModelData()) != null;
 			}
-		} else if (ingredient instanceof SimpleItem si) {
+		} else if (ingredient instanceof SimpleItemBase si) {
 			// If we contain the Material of the Simple Item, we match
             return hasMaterials() && materials.contains(si.getMaterial());
 		}
@@ -259,7 +259,7 @@ public class CustomMatchAnyItem extends RecipeItem {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		CustomMatchAnyItem that = (CustomMatchAnyItem) o;
+		CustomMatchAnyItemBase that = (CustomMatchAnyItemBase) o;
 		return Objects.equals(materials, that.materials) &&
 			Objects.equals(names, that.names) &&
 			Objects.equals(lore, that.lore) &&

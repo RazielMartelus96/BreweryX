@@ -3,7 +3,7 @@ package com.dre.brewery.filedata;
 import com.dre.brewery.*;
 import com.dre.brewery.lore.Base91DecoderStream;
 import com.dre.brewery.recipe.Ingredient;
-import com.dre.brewery.model.items.old.SimpleItem;
+import com.dre.brewery.model.items.old.SimpleItemBase;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.BoundingBox;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -216,11 +216,11 @@ public class BData {
 				BreweryPlugin.getInstance().debugLog("converting Data Material from " + matSplit[0] + " to " + m);
 			}
 			if (m == null) continue;
-			SimpleItem item;
+			SimpleItemBase item;
 			if (matSplit.length == 2) {
-				item = new SimpleItem(m, (short) BreweryPlugin.getInstance().parseInt(matSplit[1]));
+				item = new SimpleItemBase(m, (short) BreweryPlugin.getInstance().parseInt(matSplit[1]));
 			} else {
-				item = new SimpleItem(m);
+				item = new SimpleItemBase(m);
 			}
 			item.setAmount(matSection.getInt(mat));
 			ingredients.add(item);

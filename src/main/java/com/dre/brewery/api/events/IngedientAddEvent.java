@@ -1,6 +1,7 @@
 package com.dre.brewery.api.events;
 
 import com.dre.brewery.BCauldron;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.utility.LegacyUtil;
 import org.bukkit.block.Block;
@@ -24,11 +25,11 @@ public class IngedientAddEvent extends PlayerEvent implements Cancellable {
 	private final Block block;
 	private final BCauldron cauldron;
 	private ItemStack ingredient;
-	private RecipeItem rItem;
+	private BaseRecipeItem rItem;
 	private boolean cancelled;
 	private boolean takeItem = true;
 
-	public IngedientAddEvent(Player who, Block block, BCauldron bCauldron, ItemStack ingredient, RecipeItem rItem) {
+	public IngedientAddEvent(Player who, Block block, BCauldron bCauldron, ItemStack ingredient, BaseRecipeItem rItem) {
 		super(who);
 		this.block = block;
 		cauldron = bCauldron;
@@ -49,7 +50,7 @@ public class IngedientAddEvent extends PlayerEvent implements Cancellable {
 	 * <p>This might not be the only recipe item that will match the ingredient
 	 * <p>Will be recalculated if the Ingredient is changed with the setIngredient Method
 	 */
-	public RecipeItem getRecipeItem() {
+	public BaseRecipeItem getRecipeItem() {
 		return rItem;
 	}
 

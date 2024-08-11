@@ -1,9 +1,9 @@
 package com.dre.brewery.recipe;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.model.items.old.CustomItem;
-import com.dre.brewery.model.items.old.RecipeItem;
-import com.dre.brewery.model.items.old.SimpleItem;
+import com.dre.brewery.model.items.old.CustomItemBase;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
+import com.dre.brewery.model.items.old.SimpleItemBase;
 import com.dre.brewery.utility.StringParser;
 import com.dre.brewery.utility.Tuple;
 import org.bukkit.Color;
@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 public class BCauldronRecipe {
 	public static List<BCauldronRecipe> recipes = new ArrayList<>();
 	public static int numConfigRecipes;
-	public static List<RecipeItem> acceptedCustom = new ArrayList<>(); // All accepted custom and other items
+	public static List<BaseRecipeItem> acceptedCustom = new ArrayList<>(); // All accepted custom and other items
 	public static Set<Material> acceptedSimple = new HashSet<>(); // All accepted simple items
 	public static Set<Material> acceptedMaterials = new HashSet<>(); // Fast cache for all accepted Materials
 
 	private String name;
-	private List<RecipeItem> ingredients;
+	private List<BaseRecipeItem> ingredients;
 	private PotionColor color;
 	private List<Tuple<Integer, Color>> particleColor = new ArrayList<>();
 	private List<String> lore;
@@ -125,7 +125,7 @@ public class BCauldronRecipe {
 	}
 
 	@NotNull
-	public List<RecipeItem> getIngredients() {
+	public List<BaseRecipeItem> getIngredients() {
 		return ingredients;
 	}
 
@@ -154,7 +154,7 @@ public class BCauldronRecipe {
 	/**
 	 * When Changing ingredients, Accepted Lists have to be updated in BCauldronRecipe
 	 */
-	public void setIngredients(@NotNull List<RecipeItem> ingredients) {
+	public void setIngredients(@NotNull List<BaseRecipeItem> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -200,7 +200,7 @@ public class BCauldronRecipe {
 			return 0;
 		}
 		float match = 10;
-		search: for (RecipeItem recipeIng : ingredients) {
+		search: for (BaseRecipeItem recipeIng : ingredients) {
 			for (Ingredient ing : items) {
 				if (recipeIng.matches(ing)) {
 					double difference = Math.abs(recipeIng.getAmount() - ing.getAmount());
@@ -232,12 +232,12 @@ public class BCauldronRecipe {
 	}
 
 	public void updateAcceptedLists() {
-		for (RecipeItem ingredient : getIngredients()) {
+		for (BaseRecipeItem ingredient : getIngredients()) {
 			if (ingredient.hasMaterials()) {
 				BCauldronRecipe.acceptedMaterials.addAll(ingredient.getMaterials());
 			}
-			if (ingredient instanceof SimpleItem) {
-				BCauldronRecipe.acceptedSimple.add(((SimpleItem) ingredient).getMaterial());
+			if (ingredient instanceof SimpleItemBase) {
+				BCauldronRecipe.acceptedSimple.add(((SimpleItemBase) ingredient).getMaterial());
 			} else {
 				// Add it as acceptedCustom
 				if (!BCauldronRecipe.acceptedCustom.contains(ingredient)) {
@@ -336,7 +336,7 @@ public class BCauldronRecipe {
 		}
 
 
-		public Builder addIngredient(RecipeItem... item) {
+		public Builder addIngredient(BaseRecipeItem... item) {
 			if (recipe.ingredients == null) {
 				recipe.ingredients = new ArrayList<>();
 			}
@@ -349,7 +349,7 @@ public class BCauldronRecipe {
 				recipe.ingredients = new ArrayList<>();
 			}
 			for (ItemStack i : item) {
-				recipe.ingredients.add(new CustomItem(i));
+				recipe.ingredients.add(new CustomItemBase(i));
 			}
 			return this;
 		}

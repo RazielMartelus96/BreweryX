@@ -11,9 +11,9 @@ import com.dre.brewery.integration.barrel.GriefPreventionBarrel;
 import com.dre.brewery.integration.barrel.LWCBarrel;
 import com.dre.brewery.integration.barrel.LogBlockBarrel;
 import com.dre.brewery.integration.barrel.TownyBarrel;
-import com.dre.brewery.integration.item.MMOItemsPluginItem;
+import com.dre.brewery.integration.item.MMOItemsPluginItemBase;
 import com.dre.brewery.recipe.BCauldronRecipe;
-import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import io.lumine.mythic.lib.api.item.NBTItem;
@@ -328,9 +328,9 @@ public class IntegrationListener implements Listener {
 				if (event.getClickedBlock() != null && LegacyUtil.isWaterCauldron(event.getClickedBlock().getType())) {
 					NBTItem item = NBTItem.get(event.getItem());
 					if (item.hasType()) {
-						for (RecipeItem rItem : BCauldronRecipe.acceptedCustom) {
-							if (rItem instanceof MMOItemsPluginItem) {
-								MMOItemsPluginItem mmo = ((MMOItemsPluginItem) rItem);
+						for (BaseRecipeItem rItem : BCauldronRecipe.acceptedCustom) {
+							if (rItem instanceof MMOItemsPluginItemBase) {
+								MMOItemsPluginItemBase mmo = ((MMOItemsPluginItemBase) rItem);
 								if (mmo.matches(event.getItem())) {
 									event.setCancelled(true);
 									BreweryPlugin.getInstance().playerListener.onPlayerInteract(event);

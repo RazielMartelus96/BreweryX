@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * Simple Minecraft Item with just Material
  */
-public class SimpleItem extends RecipeItem implements Ingredient {
+public class SimpleItemBase extends BaseRecipeItem implements Ingredient {
 
 	private static final MinecraftVersion VERSION = BreweryPlugin.getMCVersion();
 
@@ -26,11 +26,11 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 	private short dur; // Old Mc
 
 
-	public SimpleItem(Material mat) {
+	public SimpleItemBase(Material mat) {
 		this(mat, (short) 0);
 	}
 
-	public SimpleItem(Material mat, short dur) {
+	public SimpleItemBase(Material mat, short dur) {
 		this.mat = mat;
 		this.dur = dur;
 	}
@@ -54,13 +54,13 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 	@NotNull
 	@Override
 	public Ingredient toIngredient(ItemStack forItem) {
-		return ((SimpleItem) getMutableCopy());
+		return ((SimpleItemBase) getMutableCopy());
 	}
 
 	@NotNull
 	@Override
 	public Ingredient toIngredientGeneric() {
-		return ((SimpleItem) getMutableCopy());
+		return ((SimpleItemBase) getMutableCopy());
 	}
 
 	@Override
@@ -77,14 +77,14 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 		if (isSimilar(ingredient)) {
 			return true;
 		}
-		if (ingredient instanceof RecipeItem) {
-			if (!((RecipeItem) ingredient).hasMaterials()) {
+		if (ingredient instanceof BaseRecipeItem) {
+			if (!((BaseRecipeItem) ingredient).hasMaterials()) {
 				return false;
 			}
-			if (ingredient instanceof CustomItem) {
+			if (ingredient instanceof CustomItemBase) {
 				// Only match if the Custom Item also only defines material
 				// If the custom item has more info like name and lore, it is not supposed to match a simple item
-				CustomItem ci = (CustomItem) ingredient;
+				CustomItemBase ci = (CustomItemBase) ingredient;
 				return !ci.hasLore() && !ci.hasName() && mat == ci.getMaterial();
 			}
 		}
@@ -96,8 +96,8 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 		if (this == item) {
 			return true;
 		}
-		if (item instanceof SimpleItem) {
-			SimpleItem si = ((SimpleItem) item);
+		if (item instanceof SimpleItemBase) {
+			SimpleItemBase si = ((SimpleItemBase) item);
 			return si.mat == mat && si.dur == dur;
 		}
 		return false;
@@ -108,7 +108,7 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		SimpleItem item = (SimpleItem) o;
+		SimpleItemBase item = (SimpleItemBase) o;
 		return dur == item.dur &&
 			mat == item.mat;
 	}
@@ -133,13 +133,13 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 		out.writeShort(dur);
 	}
 
-	public static SimpleItem loadFrom(ItemLoader loader) {
+	public static SimpleItemBase loadFrom(ItemLoader loader) {
 		try {
 			DataInputStream in = loader.getInputStream();
 			Material mat = Material.getMaterial(in.readUTF());
 			short dur = in.readShort();
 			if (mat != null) {
-				SimpleItem item = new SimpleItem(mat, dur);
+				SimpleItemBase item = new SimpleItemBase(mat, dur);
 				return item;
 			}
 		} catch (IOException e) {
@@ -150,7 +150,7 @@ public class SimpleItem extends RecipeItem implements Ingredient {
 
 	// Needs to be called at Server start
 	public static void registerItemLoader(BreweryPlugin breweryPlugin) {
-		breweryPlugin.registerForItemLoader("SI", SimpleItem::loadFrom);
+		breweryPlugin.registerForItemLoader("SI", SimpleItemBase::loadFrom);
 	}
 
 }

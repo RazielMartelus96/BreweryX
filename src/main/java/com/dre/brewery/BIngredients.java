@@ -3,11 +3,12 @@ package com.dre.brewery;
 import com.dre.brewery.api.events.brew.BrewModifyEvent;
 import com.dre.brewery.lore.Base91EncoderStream;
 import com.dre.brewery.lore.BrewLore;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.ItemLoader;
-import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.recipe.PotionColor;
 import com.dre.brewery.utility.MinecraftVersion;
 import org.bukkit.Material;
@@ -91,7 +92,7 @@ public class BIngredients {
 	 * @param ingredient the item to add
 	 * @param rItem the RecipeItem that matches the ingredient
  	 */
-	public void add(ItemStack ingredient, RecipeItem rItem) {
+	public void add(ItemStack ingredient, BaseRecipeItem rItem) {
 		Ingredient ingredientItem = rItem.toIngredient(ingredient);
 		for (Ingredient existing : ingredients) {
 			if (existing.isSimilar(ingredientItem)) {

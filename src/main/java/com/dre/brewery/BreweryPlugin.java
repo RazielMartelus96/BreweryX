@@ -44,11 +44,11 @@ import com.dre.brewery.listeners.PlayerListener;
 import com.dre.brewery.listeners.WorldListener;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
-import com.dre.brewery.model.items.old.CustomItem;
+import com.dre.brewery.model.items.old.CustomItemBase;
 import com.dre.brewery.recipe.Ingredient;
 import com.dre.brewery.recipe.ItemLoader;
-import com.dre.brewery.model.items.old.PluginItem;
-import com.dre.brewery.model.items.old.SimpleItem;
+import com.dre.brewery.model.items.old.PluginItemBase;
+import com.dre.brewery.model.items.old.SimpleItemBase;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -154,9 +154,9 @@ public class BreweryPlugin extends JavaPlugin {
 		}
 
 		// Register Item Loaders
-		CustomItem.registerItemLoader(this);
-		SimpleItem.registerItemLoader(this);
-		PluginItem.registerItemLoader(this);
+		CustomItemBase.registerItemLoader(this);
+		SimpleItemBase.registerItemLoader(this);
+		PluginItemBase.registerItemLoader(this);
 
 		// Read data files
 		BData.readData();

@@ -2,11 +2,11 @@ package com.dre.brewery.integration.item;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
-import com.dre.brewery.model.items.old.PluginItem;
+import com.dre.brewery.model.items.old.PluginItemBase;
 import io.lumine.mythic.lib.api.item.NBTItem;
 import org.bukkit.inventory.ItemStack;
 
-public class MMOItemsPluginItem extends PluginItem {
+public class MMOItemsPluginItemBase extends PluginItemBase {
 
 // When implementing this, put Brewery as softdepend in your plugin.yml!
 // We're calling this as server start:

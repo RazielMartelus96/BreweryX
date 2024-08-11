@@ -4,10 +4,10 @@ import com.dre.brewery.BIngredients;
 import com.dre.brewery.Brew;
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
-import com.dre.brewery.model.items.old.CustomItem;
-import com.dre.brewery.model.items.old.PluginItem;
-import com.dre.brewery.model.items.old.RecipeItem;
-import com.dre.brewery.model.items.old.SimpleItem;
+import com.dre.brewery.model.items.old.CustomItemBase;
+import com.dre.brewery.model.items.old.PluginItemBase;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
+import com.dre.brewery.model.items.old.SimpleItemBase;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -43,7 +43,7 @@ public class BRecipe {
 	private String optionalID; // ID that might be given by the config
 
 	// brewing
-	private List<RecipeItem> ingredients = new ArrayList<>(); // Items and amounts
+	private List<BaseRecipeItem> ingredients = new ArrayList<>(); // Items and amounts
 	private int difficulty; // difficulty to brew the potion, how exact the instruction has to be followed
 	private int cookingTime; // time to cook in cauldron
 	private byte distillruns; // runs through the brewer
@@ -178,7 +178,7 @@ public class BRecipe {
         return recipe;
 	}
 
-	public static List<RecipeItem> loadIngredients(ConfigurationSection cfg, String recipeId) {
+	public static List<BaseRecipeItem> loadIngredients(ConfigurationSection cfg, String recipeId) {
 		List<String> ingredientsList;
 		if (cfg.isString(recipeId + ".ingredients")) {
 			ingredientsList = new ArrayList<>(1);
@@ -186,7 +186,7 @@ public class BRecipe {
 		} else {
 			ingredientsList = cfg.getStringList(recipeId + ".ingredients");
 		}
-        List<RecipeItem> ingredients = new ArrayList<>(ingredientsList.size());
+        List<BaseRecipeItem> ingredients = new ArrayList<>(ingredientsList.size());
 		listLoop:
 		for (String item : ingredientsList) {
 			String[] ingredParts = item.split("/");
@@ -209,14 +209,14 @@ public class BRecipe {
 
 			if (BreweryPlugin.getMCVersion().isOrEarlier(MinecraftVersion.V1_14) && matParts[0].equalsIgnoreCase("sweet_berries")) {
 				// Using this in default recipes, but will error on < 1.14
-				ingredients.add(new SimpleItem(Material.BEDROCK));
+				ingredients.add(new SimpleItemBase(Material.BEDROCK));
 				continue;
 			}
 
 			// Check if this is a Plugin Item
 			String[] pluginItem = matParts[0].split(":");
 			if (pluginItem.length > 1) {
-				RecipeItem custom = PluginItem.fromConfig(pluginItem[0], pluginItem[1]);
+				BaseRecipeItem custom = PluginItemBase.fromConfig(pluginItem[0], pluginItem[1]);
 				if (custom != null) {
 					custom.setAmount(amount);
 					custom.makeImmutable();
@@ -231,7 +231,7 @@ public class BRecipe {
 			}
 
 			// Try to find this Ingredient as Custom Item
-			for (RecipeItem custom : BConfig.customItems) {
+			for (BaseRecipeItem custom : BConfig.customItems) {
 				if (custom.getConfigId().equalsIgnoreCase(matParts[0])) {
 					custom = custom.getMutableCopy();
 					custom.setAmount(amount);
@@ -281,11 +281,11 @@ public class BRecipe {
 				}
 			}
 			if (mat != null) {
-				RecipeItem rItem;
+				BaseRecipeItem rItem;
 				if (durability > -1) {
-					rItem = new SimpleItem(mat, durability);
+					rItem = new SimpleItemBase(mat, durability);
 				} else {
-					rItem = new SimpleItem(mat);
+					rItem = new SimpleItemBase(mat);
 				}
 				rItem.setAmount(amount);
 				rItem.makeImmutable();
@@ -403,7 +403,7 @@ public class BRecipe {
 		if (list.size() < ingredients.size()) {
 			return true;
 		}
-		for (RecipeItem rItem : ingredients) {
+		for (BaseRecipeItem rItem : ingredients) {
 			boolean matches = false;
 			for (Ingredient used : list) {
 				if (rItem.matches(used)) {
@@ -504,7 +504,7 @@ public class BRecipe {
 	 */
 	public Brew createBrew(int quality) {
 		List<Ingredient> list = new ArrayList<>(ingredients.size());
-		for (RecipeItem rItem : ingredients) {
+		for (BaseRecipeItem rItem : ingredients) {
 			Ingredient ing = rItem.toIngredientGeneric();
 			ing.setAmount(rItem.getAmount());
 			list.add(ing);
@@ -516,12 +516,12 @@ public class BRecipe {
 	}
 
 	public void updateAcceptedLists() {
-		for (RecipeItem ingredient : getIngredients()) {
+		for (BaseRecipeItem ingredient : getIngredients()) {
 			if (ingredient.hasMaterials()) {
 				BCauldronRecipe.acceptedMaterials.addAll(ingredient.getMaterials());
 			}
-			if (ingredient instanceof SimpleItem) {
-				BCauldronRecipe.acceptedSimple.add(((SimpleItem) ingredient).getMaterial());
+			if (ingredient instanceof SimpleItemBase) {
+				BCauldronRecipe.acceptedSimple.add(((SimpleItemBase) ingredient).getMaterial());
 			} else {
 				// Add it as acceptedCustom
 				if (!BCauldronRecipe.acceptedCustom.contains(ingredient)) {
@@ -538,7 +538,7 @@ public class BRecipe {
 	 * how many of a specific ingredient in the recipe
 	 */
 	public int amountOf(Ingredient ing) {
-		for (RecipeItem rItem : ingredients) {
+		for (BaseRecipeItem rItem : ingredients) {
 			if (rItem.matches(ing)) {
 				return rItem.getAmount();
 			}
@@ -550,7 +550,7 @@ public class BRecipe {
 	 * how many of a specific ingredient in the recipe
 	 */
 	public int amountOf(ItemStack item) {
-		for (RecipeItem rItem : ingredients) {
+		for (BaseRecipeItem rItem : ingredients) {
 			if (rItem.matches(item)) {
 				return rItem.getAmount();
 			}
@@ -598,7 +598,7 @@ public class BRecipe {
 		return Optional.ofNullable(optionalID);
 	}
 
-	public List<RecipeItem> getIngredients() {
+	public List<BaseRecipeItem> getIngredients() {
 		return ingredients;
 	}
 
@@ -727,7 +727,7 @@ public class BRecipe {
 	/**
 	 * When Changing ingredients, Accepted Lists have to be updated in BCauldronRecipe
 	 */
-	public void setIngredients(List<RecipeItem> ingredients) {
+	public void setIngredients(List<BaseRecipeItem> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -871,14 +871,14 @@ public class BRecipe {
 		}
 
 
-		public Builder addIngredient(RecipeItem... item) {
+		public Builder addIngredient(BaseRecipeItem... item) {
 			Collections.addAll(recipe.ingredients, item);
 			return this;
 		}
 
 		public Builder addIngredient(ItemStack... item) {
 			for (ItemStack i : item) {
-				CustomItem customItem = new CustomItem(i);
+				CustomItemBase customItem = new CustomItemBase(i);
 				customItem.setAmount(i.getAmount());
 				recipe.ingredients.add(customItem);
 			}
@@ -1047,7 +1047,7 @@ public class BRecipe {
 			if (!recipe.isValid()) {
 				throw new IllegalArgumentException("Recipe has not valid");
 			}
-			for (RecipeItem ingredient : recipe.ingredients) {
+			for (BaseRecipeItem ingredient : recipe.ingredients) {
 				ingredient.makeImmutable();
 			}
 			return recipe;

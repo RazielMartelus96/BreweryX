@@ -2,14 +2,14 @@ package com.dre.brewery.integration.item;
 
 import com.dre.brewery.Brew;
 import com.dre.brewery.recipe.BRecipe;
-import com.dre.brewery.model.items.old.PluginItem;
+import com.dre.brewery.model.items.old.PluginItemBase;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * For recipes that use Brewery Items as input
  */
-public class BreweryPluginItem extends PluginItem {
+public class BreweryPluginItemBase extends PluginItemBase {
 
 // When implementing this, put Brewery as softdepend in your plugin.yml!
 // We're calling this as server start:

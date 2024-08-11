@@ -2,8 +2,9 @@ package com.dre.brewery;
 
 import com.dre.brewery.api.events.IngedientAddEvent;
 import com.dre.brewery.filedata.BConfig;
-import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.recipe.BCauldronRecipe;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.MinecraftVersion;
@@ -91,7 +92,7 @@ public class BCauldron {
 	}
 
 	// add an ingredient to the cauldron
-	public void add(ItemStack ingredient, RecipeItem rItem) {
+	public void add(ItemStack ingredient, BaseRecipeItem rItem) {
 		if (ingredient == null || ingredient.getType() == Material.AIR) return;
 		if (changed) {
 			ingredients = ingredients.copy();
@@ -143,7 +144,7 @@ public class BCauldron {
 				return false;
 			}
 			// If the Item is on the list, or customized, we have to do more checks
-			RecipeItem rItem = RecipeItem.getMatchingRecipeItem(ingredient, false);
+			BaseRecipeItem rItem = RecipeItem.getMatchingRecipeItem(ingredient, false);
 			if (rItem == null) {
 				return false;
 			}

@@ -21,34 +21,34 @@ import java.util.Objects;
  * Minecraft Item with custon name and lore.
  * <p>Mostly used for Custom Items of the Config, but also for general custom items
  */
-public class CustomItem extends RecipeItem implements Ingredient {
+public class CustomItemBase extends BaseRecipeItem implements Ingredient {
 
 	private Material mat;
 	private String name;
 	private List<String> lore;
 	private int customModelData = 0;
 
-	public CustomItem() {
+	public CustomItemBase() {
 	}
 
-	public CustomItem(Material mat) {
+	public CustomItemBase(Material mat) {
 		this.mat = mat;
 	}
 
-	public CustomItem(Material mat, String name, List<String> lore) {
+	public CustomItemBase(Material mat, String name, List<String> lore) {
 		this.mat = mat;
 		this.name = name;
 		this.lore = lore;
 	}
 
-	public CustomItem(Material mat, String name, List<String> lore, int customModelData) {
+	public CustomItemBase(Material mat, String name, List<String> lore, int customModelData) {
 		this.mat = mat;
 		this.name = name;
 		this.lore = lore;
 		this.customModelData = customModelData;
 	}
 
-	public CustomItem(ItemStack item) {
+	public CustomItemBase(ItemStack item) {
 		mat = item.getType();
 		if (!item.hasItemMeta()) {
 			return;
@@ -125,13 +125,13 @@ public class CustomItem extends RecipeItem implements Ingredient {
 	@NotNull
 	@Override
 	public Ingredient toIngredient(ItemStack forItem) {
-		return ((CustomItem) getMutableCopy());
+		return ((CustomItemBase) getMutableCopy());
 	}
 
 	@NotNull
 	@Override
 	public Ingredient toIngredientGeneric() {
-		return ((CustomItem) getMutableCopy());
+		return ((CustomItemBase) getMutableCopy());
 	}
 
 	@Override
@@ -139,13 +139,13 @@ public class CustomItem extends RecipeItem implements Ingredient {
 		if (isSimilar(ingredient)) {
 			return true;
 		}
-		if (ingredient instanceof RecipeItem) {
-			RecipeItem rItem = ((RecipeItem) ingredient);
-			if (rItem instanceof SimpleItem) {
+		if (ingredient instanceof BaseRecipeItem) {
+			BaseRecipeItem rItem = ((BaseRecipeItem) ingredient);
+			if (rItem instanceof SimpleItemBase) {
 				// If the recipe item is just a simple item, only match if we also only define material
 				// If this is a custom item with more info, we don't want to match a simple item
-				return hasMaterials() && !hasLore() && !hasName() && getMaterial() == ((SimpleItem) rItem).getMaterial();
-			} else if (rItem instanceof CustomItem other) {
+				return hasMaterials() && !hasLore() && !hasName() && getMaterial() == ((SimpleItemBase) rItem).getMaterial();
+			} else if (rItem instanceof CustomItemBase other) {
 				// If the other is a CustomItem as well and not Similar to ours, it might have more data and we still match
                 if (mat == null || mat == other.mat) {
 					if (!hasName() || (other.name != null && name.equalsIgnoreCase(other.name))) {
@@ -232,7 +232,7 @@ public class CustomItem extends RecipeItem implements Ingredient {
 		if (this == item) {
 			return true;
 		}
-		if (item instanceof CustomItem ci) {
+		if (item instanceof CustomItemBase ci) {
             return mat == ci.mat && Objects.equals(name, ci.name) && Objects.equals(lore, ci.lore) && customModelData == ci.customModelData;
 		}
 		return false;
@@ -241,8 +241,8 @@ public class CustomItem extends RecipeItem implements Ingredient {
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;
-		if (obj instanceof CustomItem) {
-			return isSimilar(((CustomItem) obj));
+		if (obj instanceof CustomItemBase) {
+			return isSimilar(((CustomItemBase) obj));
 		}
 		return false;
 	}
@@ -295,10 +295,10 @@ public class CustomItem extends RecipeItem implements Ingredient {
 		}
 	}
 
-	public static CustomItem loadFrom(ItemLoader loader) {
+	public static CustomItemBase loadFrom(ItemLoader loader) {
 		try {
 			DataInputStream in = loader.getInputStream();
-			CustomItem item = new CustomItem();
+			CustomItemBase item = new CustomItemBase();
 			if (in.readBoolean()) {
 				item.mat = Material.getMaterial(in.readUTF());
 			}
@@ -324,6 +324,6 @@ public class CustomItem extends RecipeItem implements Ingredient {
 
 	// Needs to be called at Server start
 	public static void registerItemLoader(BreweryPlugin breweryPlugin) {
-		breweryPlugin.registerForItemLoader("CI", CustomItem::loadFrom);
+		breweryPlugin.registerForItemLoader("CI", CustomItemBase::loadFrom);
 	}
 }

@@ -22,9 +22,9 @@ import java.util.function.Supplier;
  * <p>See /integration/item for examples on how to extend this class.
  * <p>This class stores items as name of the plugin and item id
  */
-public abstract class PluginItem extends RecipeItem implements Ingredient {
+public abstract class PluginItemBase extends BaseRecipeItem implements Ingredient {
 
-	private static Map<String, Supplier<PluginItem>> constructors = new HashMap<>();
+	private static Map<String, Supplier<PluginItemBase>> constructors = new HashMap<>();
 
 	private String plugin;
 	private String itemId;
@@ -32,7 +32,7 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	/**
 	 * New Empty PluginItem
 	 */
-	public PluginItem() {
+	public PluginItemBase() {
 	}
 
 	/**
@@ -41,7 +41,7 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	 * @param plugin The name of the Plugin
 	 * @param itemId The ItemID
 	 */
-	public PluginItem(String plugin, String itemId) {
+	public PluginItemBase(String plugin, String itemId) {
 		this.plugin = plugin;
 		this.itemId = itemId;
 	}
@@ -95,19 +95,19 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	@NotNull
 	@Override
 	public Ingredient toIngredient(ItemStack forItem) {
-		return ((PluginItem) getMutableCopy());
+		return ((PluginItemBase) getMutableCopy());
 	}
 
 	@NotNull
 	@Override
 	public Ingredient toIngredientGeneric() {
-		return ((PluginItem) getMutableCopy());
+		return ((PluginItemBase) getMutableCopy());
 	}
 
 	@Override
 	public boolean isSimilar(Ingredient item) {
-		if (item instanceof PluginItem) {
-			return Objects.equals(plugin, ((PluginItem) item).plugin) && Objects.equals(itemId, ((PluginItem) item).itemId);
+		if (item instanceof PluginItemBase) {
+			return Objects.equals(plugin, ((PluginItemBase) item).plugin) && Objects.equals(itemId, ((PluginItemBase) item).itemId);
 		}
 		return false;
 	}
@@ -117,7 +117,7 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		PluginItem item = (PluginItem) o;
+		PluginItemBase item = (PluginItemBase) o;
 		return Objects.equals(plugin, item.plugin) &&
 			Objects.equals(itemId, item.itemId);
 	}
@@ -141,15 +141,15 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	 * @param loader The ItemLoader from which to load the data, use loader.getInputStream()
 	 * @return The constructed PluginItem
 	 */
-	public static PluginItem loadFrom(ItemLoader loader) {
+	public static PluginItemBase loadFrom(ItemLoader loader) {
 		try {
 			DataInputStream in = loader.getInputStream();
 			String plugin = in.readUTF();
 			String itemId = in.readUTF();
-			PluginItem item = fromConfig(plugin, itemId);
+			PluginItemBase item = fromConfig(plugin, itemId);
 			if (item == null) {
 				// Plugin not found when loading from Item, use a generic PluginItem that never matches other items
-				item = new PluginItem(plugin, itemId) {
+				item = new PluginItemBase(plugin, itemId) {
 					@Override
 					public boolean matches(ItemStack item) {
 						return false;
@@ -168,7 +168,7 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	 * <p>Needs to be called at Server start.
  	 */
 	public static void registerItemLoader(BreweryPlugin breweryPlugin) {
-		breweryPlugin.registerForItemLoader("PI", PluginItem::loadFrom);
+		breweryPlugin.registerForItemLoader("PI", PluginItemBase::loadFrom);
 	}
 
 
@@ -181,10 +181,10 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	 * @return The Plugin Item if found, or null if there is no plugin for the given String
 	 */
 	@Nullable
-	public static PluginItem fromConfig(String plugin, String itemId) {
+	public static PluginItemBase fromConfig(String plugin, String itemId) {
 		plugin = plugin.toLowerCase();
 		if (constructors.containsKey(plugin)) {
-			PluginItem item = constructors.get(plugin).get();
+			PluginItemBase item = constructors.get(plugin).get();
 			item.setPlugin(plugin);
 			item.setItemId(itemId);
 			item.onConstruct();
@@ -205,7 +205,7 @@ public abstract class PluginItem extends RecipeItem implements Ingredient {
 	 * @param pluginId The ID to use in the config
 	 * @param constructor The constructor i.e. YourPluginItem::new
 	 */
-	public static void registerForConfig(String pluginId, Supplier<PluginItem> constructor) {
+	public static void registerForConfig(String pluginId, Supplier<PluginItemBase> constructor) {
 		constructors.put(pluginId.toLowerCase(), constructor);
 	}
 

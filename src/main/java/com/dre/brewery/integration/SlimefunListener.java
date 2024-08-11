@@ -1,9 +1,9 @@
 package com.dre.brewery.integration;
 
 import com.dre.brewery.BreweryPlugin;
-import com.dre.brewery.integration.item.SlimefunPluginItem;
+import com.dre.brewery.integration.item.SlimefunPluginItemBase;
 import com.dre.brewery.recipe.BCauldronRecipe;
-import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.utility.LegacyUtil;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -27,9 +27,9 @@ public class SlimefunListener implements Listener {
 				if (LegacyUtil.isWaterCauldron(event.getClickedBlock().get().getType())) {
 					Optional<SlimefunItem> slimefunItem = event.getSlimefunItem();
 					if (slimefunItem.isPresent()) {
-						for (RecipeItem rItem : BCauldronRecipe.acceptedCustom) {
-							if (rItem instanceof SlimefunPluginItem) {
-								if (slimefunItem.get().getId().equalsIgnoreCase(((SlimefunPluginItem) rItem).getItemId())) {
+						for (BaseRecipeItem rItem : BCauldronRecipe.acceptedCustom) {
+							if (rItem instanceof SlimefunPluginItemBase) {
+								if (slimefunItem.get().getId().equalsIgnoreCase(((SlimefunPluginItemBase) rItem).getItemId())) {
 									event.cancel();
 									BreweryPlugin.getInstance().playerListener.onPlayerInteract(event.getInteractEvent());
 									return;

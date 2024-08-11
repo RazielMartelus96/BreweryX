@@ -8,14 +8,15 @@ import com.dre.brewery.integration.barrel.WGBarrel;
 import com.dre.brewery.integration.barrel.WGBarrel5;
 import com.dre.brewery.integration.barrel.WGBarrel6;
 import com.dre.brewery.integration.barrel.WGBarrel7;
-import com.dre.brewery.integration.item.BreweryPluginItem;
-import com.dre.brewery.integration.item.MMOItemsPluginItem;
-import com.dre.brewery.integration.item.SlimefunPluginItem;
+import com.dre.brewery.integration.item.BreweryPluginItemBase;
+import com.dre.brewery.integration.item.MMOItemsPluginItemBase;
+import com.dre.brewery.integration.item.SlimefunPluginItemBase;
+import com.dre.brewery.model.items.old.RecipeItem;
 import com.dre.brewery.model.sealer.BrewerySealer;
 import com.dre.brewery.recipe.BCauldronRecipe;
 import com.dre.brewery.recipe.BRecipe;
-import com.dre.brewery.model.items.old.PluginItem;
-import com.dre.brewery.model.items.old.RecipeItem;
+import com.dre.brewery.model.items.old.PluginItemBase;
+import com.dre.brewery.model.items.old.BaseRecipeItem;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.MinecraftVersion;
 import com.dre.brewery.utility.SQLSync;
@@ -103,7 +104,7 @@ public class BConfig {
 	public static String pluginPrefix = "&2[Brewery]&f ";
 
 	//Item
-	public static List<RecipeItem> customItems = new ArrayList<>();
+	public static List<BaseRecipeItem> customItems = new ArrayList<>();
 
 	//MySQL
 	public static String sqlHost, sqlPort, sqlDB;
@@ -286,16 +287,16 @@ public class BConfig {
 			loadDataAsync = false;
 		}
 
-		PluginItem.registerForConfig("brewery", BreweryPluginItem::new);
-		PluginItem.registerForConfig("mmoitems", MMOItemsPluginItem::new);
-		PluginItem.registerForConfig("slimefun", SlimefunPluginItem::new);
-		PluginItem.registerForConfig("exoticgarden", SlimefunPluginItem::new);
+		PluginItemBase.registerForConfig("brewery", BreweryPluginItemBase::new);
+		PluginItemBase.registerForConfig("mmoitems", MMOItemsPluginItemBase::new);
+		PluginItemBase.registerForConfig("slimefun", SlimefunPluginItemBase::new);
+		PluginItemBase.registerForConfig("exoticgarden", SlimefunPluginItemBase::new);
 
 		// Loading custom items
 		ConfigurationSection configSection = config.getConfigurationSection("customItems");
 		if (configSection != null) {
 			for (String custId : configSection.getKeys(false)) {
-				RecipeItem custom = RecipeItem.fromConfigCustom(configSection, custId);
+				BaseRecipeItem custom = RecipeItem.fromConfigCustom(configSection, custId);
 				if (custom != null) {
 					custom.makeImmutable();
 					customItems.add(custom);

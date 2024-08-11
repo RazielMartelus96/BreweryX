@@ -2,11 +2,11 @@ package com.dre.brewery.integration.item;
 
 import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.filedata.BConfig;
-import com.dre.brewery.model.items.old.PluginItem;
+import com.dre.brewery.model.items.old.PluginItemBase;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.inventory.ItemStack;
 
-public class SlimefunPluginItem extends PluginItem {
+public class SlimefunPluginItemBase extends PluginItemBase {
 
 // When implementing this, put Brewery as softdepend in your plugin.yml!
 // We're calling this as server start:
