@@ -5,7 +5,6 @@ import com.dre.brewery.BreweryPlugin;
 import com.dre.brewery.api.events.ConfigLoadEvent;
 import com.dre.brewery.config.addons.ConfigKey;
 import com.dre.brewery.filedata.ConfigUpdater;
-import com.dre.brewery.filedata.DataSave;
 import com.dre.brewery.filedata.LanguageReader;
 import com.dre.brewery.config.addons.AddonType;
 import com.dre.brewery.integration.barrel.BlocklockerBarrel;
@@ -58,7 +57,7 @@ public class BConfig {
 		}
 		return instance;
 	}
-	private static final MinecraftVersion VERSION = BreweryPlugin.getMCVersion();
+	private final MinecraftVersion VERSION = BreweryPlugin.getMCVersion();
 
 	public static final String configVersion = "3.1";
 	public static boolean updateCheck;
@@ -125,7 +124,7 @@ public class BConfig {
 
 	public static BreweryPlugin breweryPlugin = BreweryPlugin.getInstance();
 
-	private static boolean checkConfigs() {
+	private boolean checkConfigs() {
 		File cfg = new File(breweryPlugin.getDataFolder(), "config.yml");
 		if (!cfg.exists()) {
 			breweryPlugin.log("§1§lNo config.yml found, creating default file! You may want to choose a config according to your language!");
@@ -152,7 +151,7 @@ public class BConfig {
 		return true;
 	}
 
-	private static void copyDefaultConfigAndLangs(boolean overwrite) {
+	private void copyDefaultConfigAndLangs(boolean overwrite) {
 		final File configs = new File(breweryPlugin.getDataFolder(), "configs");
 		final File languages = new File(breweryPlugin.getDataFolder(), "languages");
 
@@ -184,7 +183,7 @@ public class BConfig {
 
 	}
 
-	public static FileConfiguration loadConfigFile() {
+	public FileConfiguration loadConfigFile() {
 		File file = new File(BreweryPlugin.getInstance().getDataFolder(), "config.yml");
 		if (!checkConfigs()) {
 			return null;

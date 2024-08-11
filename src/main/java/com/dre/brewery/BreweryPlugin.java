@@ -168,7 +168,7 @@ public class BreweryPlugin extends JavaPlugin {
 		if (sender != null && !sender.equals(getServer().getConsoleSender())) {
 			BConfig.reloader = sender;
 		}
-		FileConfiguration cfg = BConfig.loadConfigFile();
+		FileConfiguration cfg = BConfig.getInstance().loadConfigFile();
 		if (cfg == null) {
 			// Could not read yml file, do not proceed, error was printed
 			log("Something went wrong when trying to load the config file! Please check your config.yml");
@@ -354,7 +354,7 @@ public class BreweryPlugin extends JavaPlugin {
 
 	private void initConfig(){
 		try {
-			FileConfiguration cfg = BConfig.loadConfigFile();
+			FileConfiguration cfg = BConfig.getInstance().loadConfigFile();
 			if (cfg == null) {
 				errorLog("Something went wrong when trying to load the config file! Please check your config.yml");
 				return;

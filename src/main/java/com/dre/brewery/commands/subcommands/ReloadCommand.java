@@ -26,7 +26,7 @@ public class ReloadCommand implements SubCommand {
 		if (sender != null && !sender.equals(Bukkit.getConsoleSender())) {
 			BConfig.reloader = sender;
 		}
-		FileConfiguration cfg = BConfig.loadConfigFile();
+		FileConfiguration cfg = BConfig.getInstance().loadConfigFile();
 		if (cfg == null) {
 			// Could not read yml file, do not proceed, error was printed
 			breweryPlugin.log("Something went wrong when trying to load the config file! Please check your config.yml");
